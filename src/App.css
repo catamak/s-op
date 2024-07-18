@@ -1,39 +1,39 @@
-/* App.css */
-
 body, html, #root {
   height: 100%;
   margin: 0;
-  font-family: Arial, sans-serif; /* Varsayılan fontu belirtin veya tercihinize göre güncelleyin */
 }
 
 .App {
   display: flex;
   flex-direction: column;
   height: 100%;
-  align-items: center; /* İçeriği dikeyde ortalamak için */
-  background-color: #f0f0f0; /* Arka plan rengini güncelleyebilirsiniz */
 }
 
 .controls {
   padding: 10px;
-  background-color: #170879;
+  background: #170879;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%; /* Kontrollerin genişliğini %100 yaparak tam genişlikte olmasını sağlayın */
-  color: #fff; /* Yazı rengini güncelleyebilirsiniz */
+  gap: 10px;
 }
 
 .dropdown-container {
+  border-color: grey;
+  color: black;
+  border-bottom: black;
   display: flex;
   gap: 10px;
 }
 
-.dropdown-container select {
-  background-color: #432aa3; /* Dropdown arka plan rengini güncelleyin */
-  color: #fff; /* Dropdown metin rengini güncelleyin */
-  padding: 8px; /* Dropdown içerik dolgusunu ayarlayın */
-  border: none; /* Dropdown kenarlığını kaldırın veya isteğe bağlı olarak ayarlayın */
+.custom-dropdown select {
+  background-color: #432aa3; /* Butonun arkaplan rengi */
+  color: rgb(4, 10, 131); /* Metin rengi */
+}
+
+.htDropdownButton {
+  background-color: dodgerblue; /* İstediğiniz rengi buraya girin */
+  color: rgb(34, 77, 179); /* Buton metin rengini ayarlayın */
 }
 
 .button-group {
@@ -41,51 +41,8 @@ body, html, #root {
   gap: 10px;
 }
 
-.button-group button {
-  padding: 10px 20px;
-  background-color: #4CAF50; /* Buton arka plan rengini güncelleyin */
-  color: #fff; /* Buton metin rengini güncelleyin */
-  border: none; /* Buton kenarlığını kaldırın veya isteğe bağlı olarak ayarlayın */
-  cursor: pointer; /* Butonun üzerine gelince işaretçiyi değiştir */
-}
-
 .table-container {
-  background-color: #fff; /* Tablo arka plan rengini güncelleyin */
-  width: 100%; /* Tablonun genişliğini %100 yapın */
-  padding: 20px; /* Tablo içeriği ile kenar arasındaki boşluğu ayarlayın */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hafif bir gölgelendirme ekleyin */
-  border-radius: 8px; /* Köşeleri yuvarlayarak daha modern bir görünüm sağlayın */
-}
-
-/* Handsontable stilleri */
-
-.handsontable {
-  font-family: Arial, sans-serif; /* Handsontable fontunu belirtin */
-  border-collapse: collapse; /* Tablo hücrelerini kenarlarla birleştirin */
-  width: 100%; /* Tablonun genişliğini %100 yapın */
-}
-
-.handsontable th,
-.handsontable td {
-  padding: 8px; /* Hücre dolgusunu ayarlayın */
-  border: 1px solid #ddd; /* Hücre kenarlıklarını belirtin */
-  text-align: center; /* Hücre içeriğini ortalamak için */
-}
-
-.handsontable th {
-  background-color: #f2f2f2; /* Başlık arka plan rengini güncelleyin */
-  font-weight: bold; /* Başlık metin kalınlığını belirtin */
-}
-
-.handsontable td {
-  background-color: #fff; /* Hücre arka plan rengini güncelleyin */
-}
-
-.ht_master .current {
-  background-color: #f0f0f0; /* Seçili hücre arka plan rengini güncelleyin */
-}
-
-.htDropdownButton {
-  background-color: dodgerblue; /* Dropdown buton arka plan rengini güncelleyin */
-  color: #fff; /* Dropdown buton metin rengini güncelleyin */
+  background-color: #170879;
+  flex: 1;
+  padding: 10px;
 }

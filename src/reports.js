@@ -42,8 +42,63 @@ const Reports = () => {
           <Link to="/reports" className="nav-button">Raporlar</Link>
         </div>
       </div>
-    
-     
+      <div className="chart-container">
+        <Line data={data} options={options} />
+      </div>
+      <div className="table-container">
+        <table className="report-table">
+          <thead>
+            <tr>
+              <th> Uyum Takibi</th>
+            
+            </tr>
+          </thead>
+          <tbody>
+            <th>Fabrika
+            </th>
+            <th>Ürün</th>
+            <th>Revize 1</th>
+            <th>Revize 2</th>
+            <th>Fark</th>
+            <th>Uyum</th>
+            <tr>
+              <td>PVC</td>
+              <td>65</td>
+              <td>70</td>
+            </tr>
+            <tr>
+              <td>PVC</td>
+              <td>59</td>
+              <td>65</td>
+            </tr>
+            <tr>
+              <td>PVC</td>
+              <td>80</td>
+              <td>85</td>
+            </tr>
+            <tr>
+              <td>PVC</td>
+              <td>81</td>
+              <td>78</td>
+            </tr>
+            <tr>
+              <td>AYPE</td>
+              <td>56</td>
+              <td>60</td>
+            </tr>
+            <tr>
+              <td>AYPE</td>
+              <td>55</td>
+              <td>62</td>
+            </tr>
+            <tr>
+              <td>APPE-T</td>
+              <td>40</td>
+              <td>50</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

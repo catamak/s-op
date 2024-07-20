@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import { HotTable } from '@handsontable/react';
 import 'handsontable/dist/handsontable.full.min.css';
@@ -15,6 +15,7 @@ function Home() {
   const [selectedYear, setSelectedYear] = useState('');
   const [calendarData, setCalendarData] = useState([]);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const hotTableComponent = useRef(null); // Handsontable instance referansı
 
   useEffect(() => {
     const today = new Date();
@@ -95,6 +96,7 @@ function Home() {
       </div>
       <div className="table-container">
         <HotTable
+          ref={hotTableComponent}
           data={calendarData}
           colHeaders={true}
           rowHeaders={true}
@@ -102,7 +104,11 @@ function Home() {
             { row: 0, col: 2, rowspan: 1, colspan: 4 },
             { row: 0, col: 6, rowspan: 1, colspan: 2 }
           ]}
-          afterChange={afterChange}
+          afterChange={(changes, source) => {
+            if (hotTableComponent.current) {
+              afterChange(changes, source, hotTableComponent.current.hotInstance);
+            }
+          }}
           cells={(row, col) => {
             const cellProperties = {};
             if (row > 1 && col > 1) {

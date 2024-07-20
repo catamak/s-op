@@ -54,7 +54,7 @@ body, html, #root {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-left: auto; /* Profilin sağında konumlandırır */
+  margin-left:0; /* Profilin sağında konumlandırır */
 }
 
 .nav-button {
@@ -170,9 +170,7 @@ body, html, #root {
   box-shadow: 0 2px 4px rgba(191, 183, 183, 0.1);
 }
 
-/* App.css */
 
-/* Genel arka plan rengi */
 .App {
   background-color: #f0f0f0;
   min-height: 100vh;
@@ -245,4 +243,29 @@ body, html, #root {
   width: 20%;
   height: 20%;
   margin: 0;
+}
+/* Diğer stiller */
+
+.table-container {
+  margin: 20px;
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.report-table th, .report-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.report-table th {
+  background-color: #f4f4f4;
+  text-align: center;
+}
+
+.chart-container {
+  margin: 20px;
+  text-align: center;
 }

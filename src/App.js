@@ -9,12 +9,14 @@ import { afterChange } from './afterChangeHandler';
 import profileImage from './images/kadir.png';
 import Reports from './reports';
 import LoginModal from './LoginModal';
+import ModalComponent from './ModalComponent';
 
 function Home() {
   const [selectedMonth, setSelectedMonth] = useState('');
   const [selectedYear, setSelectedYear] = useState('');
   const [calendarData, setCalendarData] = useState([]);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const hotTableComponent = useRef(null); // Handsontable instance referansı
 
   useEffect(() => {
@@ -48,8 +50,16 @@ function Home() {
     setIsLoginModalOpen(true);
   };
 
+  const handleOpenReviewModal = () => {
+    setIsReviewModalOpen(true);
+  };
+
   const handleCloseModal = () => {
     setIsLoginModalOpen(false);
+  };
+
+  const handleCloseReviewModal = () => {
+    setIsReviewModalOpen(false);
   };
 
   return (
@@ -89,7 +99,7 @@ function Home() {
           </div>
           <div className="button-group">
             <button>Taslak Kaydet</button>
-            <button>Görüşe Yolla</button>
+            <button onClick={handleOpenReviewModal}>Görüşe Yolla</button>
             <button>Revizyonu Yayınla</button>
           </div>
         </div>
@@ -125,6 +135,7 @@ function Home() {
         />
       </div>
       {isLoginModalOpen && <LoginModal onClose={handleCloseModal} />}
+      {isReviewModalOpen && <ModalComponent modalIsOpen={isReviewModalOpen} closeModal={handleCloseReviewModal} />}
     </div>
   );
 }

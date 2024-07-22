@@ -9,7 +9,6 @@ body, html, #root {
   flex-direction: column;
   height: 100%;
   background-color: #f0f0f0;
-  min-height: 100vh;
 }
 
 /* Header kısmı */
@@ -17,8 +16,10 @@ body, html, #root {
   display: flex;
   align-items: center;
   padding: 10px;
-  background-color: #1f1f1f;
+  background: #1f1f1f;
   justify-content: space-between;
+  position: relative;
+  width: 100%;
 }
 
 /* Profil ve kullanıcı adı */
@@ -27,7 +28,7 @@ body, html, #root {
   align-items: center;
   gap: 10px;
   background-color: white;
-  color: rgb(81, 77, 77);
+  color: rgb(0, 0, 0);
   border: none;
   border-radius: 5px;
   padding: 10px;
@@ -36,7 +37,7 @@ body, html, #root {
 }
 
 .user-profile:hover {
-  background-color: rgb(129, 126, 126);
+  background-color: black;
 }
 
 .profile-image {
@@ -65,12 +66,11 @@ body, html, #root {
   color: black;
   text-decoration: none;
   border-radius: 5px;
-  transition: background-color 0.3s, color 0.3s; /* Added color transition */
+  transition: background-color 0.3s;
 }
 
 .nav-button:hover {
-  background-color: #f0f0f0; /* Light gray for hover effect */
-  color: black; /* Keep text color black on hover */
+  background-color: gray;
 }
 
 .dropdown-container {
@@ -98,22 +98,6 @@ body, html, #root {
   background-color: white;
   flex: 1;
   padding: 10px;
-  margin: 20px;
-}
-
-.report-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.report-table th, .report-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
-}
-
-.report-table th {
-  background-color: #f4f4f4;
-  text-align: center;
 }
 
 /* Reports ekranının ana kapsayıcısı */
@@ -166,12 +150,11 @@ body, html, #root {
   color: white;
   text-decoration: none;
   border-radius: 5px;
-  transition: background-color 0.3s, color 0.3s; /* Added color transition */
+  transition: background-color 0.3s;
 }
 
 .Reports .nav-button:hover {
-  background-color: #333; /* Darker shade on hover */
-  color: white; /* Keep text color white on hover */
+  background-color: white;
 }
 
 /* İçerik kısmı */
@@ -180,8 +163,6 @@ body, html, #root {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  background-color: #ffffff;
-  padding: 20px;
 }
 
 /* Çizgi grafiği */
@@ -192,119 +173,109 @@ body, html, #root {
   box-shadow: 0 2px 4px rgba(191, 183, 183, 0.1);
 }
 
+/* İçerik kısmının arka plan rengini ayarlama */
+.content {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+/* Header kısmı için arka plan rengi */
+.header {
+  background-color: #1f1f1f;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Kullanıcı profili ve diğer stil ayarları */
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.username {
+  color: black;
+  font-weight: bold;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-button {
+  padding: 10px 20px;
+  background-color: white;
+  color: black;
+  text-decoration: none;
+  border-radius: 3px;
+  transition: background-color 0.3s;
+}
+
+.nav-button:hover {
+  background-color: gray;
+}
+
+/* İçerik kısmı */
+.content {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 20px;
+  background-color: #ffffff;
+}
+
 .chart-container {
   width: 20%;
   height: 20%;
   margin: 0;
+}
+
+/* Diğer stiller */
+.table-container {
+  margin: 20px;
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.report-table th, .report-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.report-table th {
+  background-color: #f4f4f4;
   text-align: center;
 }
 
-/* Modal stil ayarları */
-.ReactModal__Content {
-  position: absolute;
-  inset: 50% auto auto 50%;
-  border: 1px solid rgb(204, 204, 204);
-  background: white;
-  overflow: auto;
-  border-radius: 10px;
-  outline: none;
-  padding: 20px;
-  width: 1000px;
-  height: 530px;
-  margin-right: -50%;
-  transform: translate(-50%, -50%);
-}
-
-.ReactModal__Content h2 {
-  margin-top: 0;
-}
-
-/* Modal içeriği düzenlemeleri */
-.modal-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  height: 100%;
-}
-
-/* Sol ve sağ bölümler */
-.left-section, .right-section {
-  width: 45%; /* Adjust width to ensure both sections fit side by side */
-}
-
-/* Dropdown grubu */
-.dropdown-group {
+/* Revision info */
+.revision-info {
   display: flex;
   flex-direction: column;
+  align-items: flex-end;
   gap: 10px;
-}
-
-/* Açıklama inputu */
-.description-input {
-  width: 100%;
-  height: 100px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  resize: none;
-}
-
-/* Kaydet butonu */
-.save-button {
-  background-color: #007bff;
   color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-bottom: 10px;
-}
-
-.save-button:hover {
-  background-color: #0056b3;
-}
-
-/* Sonuç inputu */
-.result-input {
-  width: 100%;
   padding: 10px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #f9f9f9;
+  position: absolute;
+  right: 10px;
+  top: 10px;
 }
 
-/* Modal buton grubu */
-.button-group {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
-}
-
-/* Modal butonları */
-.modal-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-left: 10px;
-}
-
-.modal-button:hover {
-  background-color: #0056b3;
-}
-
-/* Nav butonları için hover efekti */
-.header .controls .button-group button.nav-button:hover {
-  background-color: #e0e0e0; /* Light gray for hover effect */
-  color: black; /* Keep text color black on hover */
-}
-
-.nav-button-home {
-  width: auto; /* Adjust width according to text */
+.revision-info p {
+  margin: 0;
+  font-size: 14px;
 }

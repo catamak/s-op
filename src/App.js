@@ -18,6 +18,9 @@ function Home() {
   const [calendarData, setCalendarData] = useState([]);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [revisionNumber, setRevisionNumber] = useState(1);
+  const [revisionDate, setRevisionDate] = useState('01.15.2024'); // Başlangıç tarihi
+  const [status, setStatus] = useState(''); // Durum bilgisini ekleyin
   const hotTableComponent = useRef(null); // Handsontable instance referansı
 
   useEffect(() => {
@@ -61,6 +64,19 @@ function Home() {
 
   const handleCloseReviewModal = () => {
     setIsReviewModalOpen(false);
+  };
+
+  const handlePublishRevision = () => {
+    const newRevisionNumber = revisionNumber + 1;
+    const today = new Date();
+    const formattedDate = today.toLocaleDateString('tr-TR'); // Türkçe formatında tarih
+
+    setRevisionNumber(newRevisionNumber);
+    setRevisionDate(formattedDate);
+  };
+
+  const handleReviewSubmit = () => {
+    setStatus('Görüş Bekleniyor'); // Durumu güncelle
   };
 
   return (
@@ -121,43 +137,55 @@ function Home() {
           <div className="button-group">
             <button className="nav-button">Taslak Kaydet</button>
             <button className="nav-button" onClick={handleOpenReviewModal}>Görüşe Yolla</button>
-            <button className="nav-button">Revizyonu Yayınla</button>
+            <button className="nav-button" onClick={handlePublishRevision}>Revizyonu Yayınla</button>
+          </div>
+        </div>
+        <div className="info-buttons-container">
+          <div className="revision-info">
+            <p>Durum: {status || ''}</p>
+            <p>Revizyon No: {revisionNumber}</p>
+            <p>Revizyon Tarihi: {revisionDate}</p>
           </div>
         </div>
       </div>
       <div className="table-container">
-      <HotTable
-  ref={hotTableComponent}
-  data={calendarData}
-  colHeaders={false} // Sütun başlıklarını kaldır
-  rowHeaders={false} // Satır başlıklarını kaldır
-  mergeCells={[
-    { row: 0, col: 2, rowspan: 1, colspan: 4 },
-    { row: 0, col: 6, rowspan: 1, colspan: 2 }
-  ]}
-  afterChange={(changes, source) => {
-    if (hotTableComponent.current) {
-      afterChange(changes, source, hotTableComponent.current.hotInstance);
-    }
-  }}
-  cells={(row, col) => {
-    const cellProperties = {};
-    if (row > 1 && col > 1) {
-      cellProperties.renderer = customRenderer;
-    } else if (row > 1) {
-      cellProperties.renderer = colorRenderer;
-    }
-    return cellProperties;
-  }}
-  width="100%"
-  height="100%"
-  licenseKey="non-commercial-and-evaluation"
-  stretchH="all"
-/>
-
+        <HotTable
+          ref={hotTableComponent}
+          data={calendarData}
+          colHeaders={false} // Sütun başlıklarını kaldır
+          rowHeaders={false} // Satır başlıklarını kaldır
+          mergeCells={[
+            { row: 0, col: 2, rowspan: 1, colspan: 4 },
+            { row: 0, col: 6, rowspan: 1, colspan: 2 }
+          ]}
+          afterChange={(changes, source) => {
+            if (hotTableComponent.current) {
+              afterChange(changes, source, hotTableComponent.current.hotInstance);
+            }
+          }}
+          cells={(row, col) => {
+            const cellProperties = {};
+            if (row > 1 && col > 1) {
+              cellProperties.renderer = customRenderer;
+            } else if (row > 1) {
+              cellProperties.renderer = colorRenderer;
+            }
+            return cellProperties;
+          }}
+          width="100%"
+          height="100%"
+          licenseKey="non-commercial-and-evaluation"
+          stretchH="all"
+        />
       </div>
       {isLoginModalOpen && <LoginModal onClose={handleCloseModal} />}
-      {isReviewModalOpen && <ModalComponent modalIsOpen={isReviewModalOpen} closeModal={handleCloseReviewModal} />}
+      {isReviewModalOpen && (
+        <ModalComponent 
+          modalIsOpen={isReviewModalOpen} 
+          closeModal={handleCloseReviewModal} 
+          onSubmit={handleReviewSubmit} // Prop'u ekle
+        />
+      )}
     </div>
   );
 }

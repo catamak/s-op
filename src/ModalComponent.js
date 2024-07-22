@@ -15,7 +15,7 @@ import './ModalComponent.css';
 const factoryNames = ['Factory 1', 'Factory 2', 'Factory 3'];
 const categories = ['Category A', 'Category B', 'Category C', 'Category D'];
 
-const ModalComponent = ({ modalIsOpen, closeModal }) => {
+const ModalComponent = ({ modalIsOpen, closeModal, onSubmit }) => {
   const theme = useTheme();
   const [selectedFactory, setSelectedFactory] = useState('');
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -33,6 +33,11 @@ const ModalComponent = ({ modalIsOpen, closeModal }) => {
     setSelectedCategories(
       typeof value === 'string' ? value.split(',') : value,
     );
+  };
+
+  const handleSubmit = () => {
+    onSubmit(); // Üst bileşene "Görüş Bekleniyor" durumunu güncellemek için çağrılır
+    closeModal();
   };
 
   return (
@@ -146,7 +151,7 @@ const ModalComponent = ({ modalIsOpen, closeModal }) => {
           <Button variant="contained" color="primary" onClick={closeModal} size="small">
             Vazgeç
           </Button>
-          <Button variant="contained" color="primary" size="small">
+          <Button variant="contained" color="primary" onClick={handleSubmit} size="small">
             Görüşe Yolla
           </Button>
         </div>

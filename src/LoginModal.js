@@ -48,7 +48,7 @@ const LoginModal = ({ onClose }) => {
         </div>
         <button type="submit">Giriş Yap</button>
       </form>
-      <button className="modal-close" onClick={onClose}>Kapat</button>
+      <button className="modal-close" onClick={onClose}>X</button>
     </Modal>
   );
 };

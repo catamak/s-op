@@ -6,7 +6,7 @@ import './App.css'; // Özel stiller
 import { generateCalendarData } from './calendarUtils';
 import { customRenderer, colorRenderer } from './customRenderers';
 import { afterChange } from './afterChangeHandler';
-import profileImage from './images/kadir.png';
+import profileImage from './images/socar.png';
 import Reports from './reports';
 import LoginModal from './LoginModal';
 import ModalComponent from './ModalComponent';
@@ -84,11 +84,13 @@ function Home() {
       <div className="header">
         <button className="user-profile" onClick={handleProfileClick}>
           <img src={profileImage} alt="Profile" className="profile-image" />
-          <div className="username">Kadir Çatamak</div>
+          <div className="username">SOCAR Türkiye</div>
         </button>
-        <div className="controls">
+        <div className="user-profile-buttons">
           <Link to="/" className="nav-button nav-button-home">Ana Sayfa</Link>
           <Link to="/reports" className="nav-button">Raporlar</Link>
+        </div>
+        <div className="controls">
           <div className="dropdown-container">
             <FormControl fullWidth sx={{ backgroundColor: 'white', borderRadius: 1 }}>
               <InputLabel id="month-select-label">Ay</InputLabel>
@@ -183,7 +185,7 @@ function Home() {
         <ModalComponent 
           modalIsOpen={isReviewModalOpen} 
           closeModal={handleCloseReviewModal} 
-          onSubmit={handleReviewSubmit} // Prop'u ekle
+          onSubmit={handleReviewSubmit} 
         />
       )}
     </div>

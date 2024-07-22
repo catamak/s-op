@@ -3,7 +3,7 @@ import { Line } from 'react-chartjs-2';
 import { Chart, registerables } from 'chart.js';
 import { Link } from 'react-router-dom';
 import './App.css'; // Özel stiller
-import profileImage from './images/kadir.png';
+import profileImage from './images/socar.png';
 
 Chart.register(...registerables);
 

@@ -1,66 +1,21 @@
 import React, { useState } from 'react';
-import Modal from 'react-modal';
-import { useTheme } from '@mui/material/styles';
+import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import OutlinedInput from '@mui/material/OutlinedInput';
 import Chip from '@mui/material/Chip';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import { useTheme } from '@mui/material/styles';
 import './ModalComponent.css';
 
-const customStyles = {
-  content: {
-    width: '1000px',
-    height: '530px',
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-    backgroundColor: 'white',
-    padding: '20px',
-    borderRadius: '10px',
-  },
-};
+const factoryNames = ['Factory 1', 'Factory 2', 'Factory 3'];
+const categories = ['Category A', 'Category B', 'Category C', 'Category D'];
 
-Modal.setAppElement('#root');
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-
-const categories = [
-  'Kategori 1',
-  'Kategori 2',
-  'Kategori 3',
-  'Kategori 4',
-];
-
-const factories = [
-  'Fabrika 1',
-  'Fabrika 2',
-  'Fabrika 3',
-];
-
-function getStyles(name, selectedCategories, theme) {
-  return {
-    fontWeight: selectedCategories.indexOf(name) === -1
-      ? theme.typography.fontWeightRegular
-      : theme.typography.fontWeightMedium,
-  };
-}
-
-function ModalComponent({ modalIsOpen, closeModal }) {
+const ModalComponent = ({ modalIsOpen, closeModal }) => {
   const theme = useTheme();
   const [selectedFactory, setSelectedFactory] = useState('');
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -72,104 +27,132 @@ function ModalComponent({ modalIsOpen, closeModal }) {
   };
 
   const handleCategoryChange = (event) => {
-    const { target: { value } } = event;
+    const {
+      target: { value },
+    } = event;
     setSelectedCategories(
       typeof value === 'string' ? value.split(',') : value,
     );
   };
 
-  const handleSendForReview = () => {
-    console.log('Fabrika:', selectedFactory);
-    console.log('Kategoriler:', selectedCategories);
-    console.log('Fabrika Açıklaması:', factoryDescription);
-    console.log('Kategori Açıklaması:', categoryDescription);
-    closeModal();
-  };
-
   return (
-    <Modal
-      isOpen={modalIsOpen}
-      onRequestClose={closeModal}
-      style={customStyles}
-      contentLabel="Görüşe Yolla Modal"
-    >
-      <h2>Görüşe Yolla</h2>
+    <Modal open={modalIsOpen} onClose={closeModal}>
       <div className="modal-content">
-        <div className="left-section">
-          <div className="input-container">
-            <label htmlFor="factory">Fabrika Seç:</label>
-            <select
-              id="factory"
-              value={selectedFactory}
-              onChange={handleFactoryChange}
-              className="select-dropdown"
-            >
-              <option value="">Seçiniz</option>
-              {factories.map((factory, index) => (
-                <option key={index} value={factory}>
-                  {factory}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="input-container">
-            <label htmlFor="factoryDescription">Fabrika Açıklaması:</label>
-            <textarea
-              id="factoryDescription"
-              value={factoryDescription}
-              onChange={(e) => setFactoryDescription(e.target.value)}
-            ></textarea>
-          </div>
-        </div>
-        <div className="right-section">
-          <div className="input-container">
-            <label htmlFor="categories">Kategoriler:</label>
-            <FormControl sx={{ m: 1, width: 300 }}>
-              <InputLabel id="categories-label">Kategoriler</InputLabel>
+        <h2 className="modal-title">Görüşe Yolla</h2>
+        <div className="content-container">
+          <div className="dropdowns-container">
+            <FormControl className="dropdown" variant="outlined" size="small">
+              <InputLabel id="factory-select-label">Fabrika Seçin</InputLabel>
               <Select
-                labelId="categories-label"
-                id="categories"
+                labelId="factory-select-label"
+                id="factory-select"
+                value={selectedFactory}
+                onChange={handleFactoryChange}
+                input={<OutlinedInput label="Fabrika Seçin" />}
+              >
+                {factoryNames.map((name) => (
+                  <MenuItem key={name} value={name}>
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl className="dropdown" variant="outlined" size="small">
+              <InputLabel id="category-select-label">Kategorileri Seçin</InputLabel>
+              <Select
+                labelId="category-select-label"
+                id="category-select"
                 multiple
                 value={selectedCategories}
                 onChange={handleCategoryChange}
-                input={<OutlinedInput id="select-multiple-chip" label="Kategoriler" />}
+                input={<OutlinedInput label="Kategorileri Seçin" />}
                 renderValue={(selected) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                  <div className="chips">
                     {selected.map((value) => (
-                      <Chip key={value} label={value} />
+                      <Chip key={value} label={value} size="small" />
                     ))}
-                  </Box>
+                  </div>
                 )}
-                MenuProps={MenuProps}
               >
-                {categories.map((category) => (
+                {categories.map((name) => (
                   <MenuItem
-                    key={category}
-                    value={category}
-                    style={getStyles(category, selectedCategories, theme)}
+                    key={name}
+                    value={name}
+                    style={{
+                      fontWeight:
+                        selectedCategories.indexOf(name) === -1
+                          ? theme.typography.fontWeightRegular
+                          : theme.typography.fontWeightMedium,
+                    }}
                   >
-                    {category}
+                    {name}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
           </div>
-          <div className="input-container">
-            <label htmlFor="categoryDescription">Kategori Açıklaması:</label>
-            <textarea
-              id="categoryDescription"
-              value={categoryDescription}
-              onChange={(e) => setCategoryDescription(e.target.value)}
-            ></textarea>
+          <div className="revision-container">
+            <div className="revision-section">
+              <h3>Fabrika Revizyon Açıklaması</h3>
+              <TextField
+                fullWidth
+                multiline
+                rows={3}
+                variant="outlined"
+                value={factoryDescription}
+                onChange={(e) => setFactoryDescription(e.target.value)}
+                className="text-input"
+                size="small"
+              />
+              <div className="button-group">
+                <Button variant="contained" color="primary" className="edit-button">
+                  Düzenle
+                </Button>
+                <Button variant="contained" color="primary" className="save-button">
+                  Kaydet
+                </Button>
+              </div>
+            </div>
+            <div className="revision-section">
+              <h3>Kategori Revizyon Açıklaması</h3>
+              <TextField
+                fullWidth
+                multiline
+                rows={3}
+                variant="outlined"
+                value={categoryDescription}
+                onChange={(e) => setCategoryDescription(e.target.value)}
+                className="text-input"
+                size="small"
+              />
+              <div className="button-group">
+                <Button variant="contained" color="primary" className="edit-button">
+                  Düzenle
+                </Button>
+                <Button variant="contained" color="primary" className="save-button">
+                  Kaydet
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <div className="button-group">
-        <button onClick={handleSendForReview}>Gönder</button>
-        <button onClick={closeModal}>Kapat</button>
+        <div className="selected-info">
+          <h4>Seçilen Fabrika:</h4>
+          <p>{selectedFactory}</p>
+          <h4>Seçilen Kategoriler:</h4>
+          <p>{selectedCategories.join(', ')}</p>
+        </div>
+        <div className="modal-actions">
+          <Button variant="contained" color="primary" onClick={closeModal} size="small">
+            Vazgeç
+          </Button>
+          <Button variant="contained" color="primary" size="small">
+            Görüşe Yolla
+          </Button>
+        </div>
       </div>
     </Modal>
   );
-}
+};
 
 export default ModalComponent;

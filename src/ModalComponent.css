@@ -1,36 +1,105 @@
 .modal-content {
-  display: flex;
-  justify-content: space-between;
-}
-
-.left-section, .right-section {
-  width: 48%;
-}
-
-.input-container {
-  margin-bottom: 20px;
-}
-
-.select-dropdown {
-  width: 100%;
-  padding: 8px;
-}
-
-textarea {
-  width: 100%;
-  height: 100px;
-  padding: 8px;
-  box-sizing: border-box;
-}
-
-.button-group {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
-}
-
-.button-group button {
-  margin-left: 10px;
-  padding: 10px 20px;
-  cursor: pointer;
-}
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 850px;
+    height: 600px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Change from center to flex-start */
+    align-items: center;
+    overflow-y: auto; /* Make the content scrollable */
+  }
+  
+  .modal-title {
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+  }
+  
+  .content-container {
+    display: flex;
+    width: 100%;
+    gap: 20px;
+  }
+  
+  .dropdowns-container {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    gap: 10px;
+  }
+  
+  .dropdown {
+    margin-bottom: 10px;
+  }
+  
+  .revision-container {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    gap: 10px;
+  }
+  
+  .revision-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .text-input {
+    width: 100%;
+    font-size: 0.875rem;
+  }
+  
+  .button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    width: 100%; /* Ensure the buttons stay within the section width */
+  }
+  
+  .edit-button, .save-button {
+    font-size: 0.875rem;
+    padding: 5px 10px;
+  }
+  
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  
+  .selected-info {
+    align-self: flex-start;
+    margin-top: 10px;
+  }
+  
+  .selected-info h4 {
+    margin: 0;
+  }
+  
+  .selected-info p {
+    margin: 0 0 10px 0;
+    font-size: 0.875rem;
+  }
+  
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    width: 100%;
+    font-size: 0.875rem;
+    position: sticky; /* Make the actions sticky */
+    bottom: 0;
+    background-color: white; /* Ensure the background is consistent */
+    padding-top: 10px;
+  }
+  

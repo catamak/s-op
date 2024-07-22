@@ -5,6 +5,22 @@ import './LoginModal.css'; // Modal stil dosyanız varsa
 // Modal'ın uygulama elemanına bağlı olduğunu belirtir
 Modal.setAppElement('#root');
 
+const customStyles = {
+  content: {
+    width: '400px',
+    height: '300px',
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+    backgroundColor: 'white',
+    padding: '20px',
+    borderRadius: '10px',
+  },
+};
+
 const LoginModal = ({ onClose }) => {
   const handleSubmit = (event) => {
     event.preventDefault(); // Formun sayfayı yenilemesini engeller
@@ -17,8 +33,7 @@ const LoginModal = ({ onClose }) => {
     <Modal
       isOpen={true}
       onRequestClose={onClose}
-      className="modal-content"
-      overlayClassName="modal-overlay"
+      style={customStyles}
       contentLabel="Giriş Yap"
     >
       <h2>Giriş Yap</h2>

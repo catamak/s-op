@@ -15,9 +15,9 @@ body, html, #root {
 .header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 10px;
   background: #1f1f1f;
-  justify-content: space-between;
   position: relative;
   width: 100%;
 }
@@ -52,10 +52,83 @@ body, html, #root {
   font-weight: bold;
 }
 
+/* Kullanıcı profil butonları */
+.user-profile-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Profil ve butonlar arasındaki boşluk */
+}
+
+/* Ana Sayfa ve Raporlar butonları */
+.user-profile-buttons .nav-button {
+  padding: 10px 20px;
+  background-color: white;
+  color: black;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.user-profile-buttons .nav-button:hover {
+  background-color: gray;
+}
+
+/* Ana Sayfa butonuna boşluk ekleme */
+.user-profile-buttons .nav-button.nav-button-home {
+  margin-left: 15px; /* Kullanıcı adı kısmından biraz boşluk bırak */
+}
+
+/* Profil ve butonları hizalamak için flex container */
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* Profil ve butonlar arasındaki boşluk */
+}
+
 /* Kontroller kısmı */
 .controls {
   display: flex;
   align-items: center;
+  gap: 10px;
+  margin-left: auto; /* Sağ tarafa hizalama */
+  margin-right: 0px; /* Sağdan biraz boşluk bırak */
+}
+
+/* Ay ve yıl seçim butonları */
+.controls .dropdown-container {
+  display: flex;
+  gap: 10px;
+  margin-left: 50px; /* Sola doğru konumlandırmak için boşluk ekleyin */
+}
+
+/* FormControl bileşenlerini küçültmek için */
+.controls .dropdown-container .MuiFormControl-root {
+  flex: 1; /* Butonların esnemesini engellemek için flex ayarı */
+  min-width: 20px; /* Minimum genişlik ayarlayarak butonları küçültün */
+  font-size: 0.9rem; /* Yazı boyutunu küçültün */
+  height:20px;
+}
+
+/* FormControl bileşenlerinin içindeki Select bileşeni için stil ayarları */
+.controls .dropdown-container .MuiSelect-root {
+  font-size: 0.9rem; /* Yazı boyutunu küçültün */
+  padding: 8px; /* İç boşlukları ayarlayın */
+}
+
+
+.controls .dropdown-container .MuiFormControl-root {
+  width: 100px; /* Buton genişliklerini otomatik ayarla */
+  height: 40px;
+}
+
+.controls .dropdown-container .MuiSelect-root {
+  font-size: 14px; /* Küçük font boyutu */
+  padding: 5px; /* Küçük padding */
+}
+
+/* Diğer butonlar */
+.button-group {
+  display: flex;
   gap: 10px;
 }
 
@@ -87,16 +160,26 @@ body, html, #root {
   color: black;
 }
 
-.button-group {
-  display: flex;
-  gap: 10px;
-}
-
 /* Tablo ve içeriği */
 .table-container {
   background-color: white;
   flex: 1;
   padding: 10px;
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.report-table th, .report-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.report-table th {
+  background-color: #f4f4f4;
+  text-align: center;
 }
 
 /* Reports ekranının ana kapsayıcısı */
@@ -149,11 +232,12 @@ body, html, #root {
   color: white;
   text-decoration: none;
   border-radius: 5px;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, color 0.3s; /* Added color transition */
 }
 
 .Reports .nav-button:hover {
-  background-color: white;
+  background-color: #333; /* Darker shade on hover */
+  color: white; /* Keep text color white on hover */
 }
 
 /* İçerik kısmı */
@@ -162,6 +246,8 @@ body, html, #root {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  background-color: #ffffff;
+  padding: 20px;
 }
 
 /* Çizgi grafiği */
@@ -171,7 +257,6 @@ body, html, #root {
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(191, 183, 183, 0.1);
 }
-
 /* İçerik kısmının arka plan rengini ayarlama */
 .content {
   background-color: #ffffff;

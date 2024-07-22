@@ -4,11 +4,10 @@ import { HotTable } from '@handsontable/react';
 import 'handsontable/dist/handsontable.full.min.css';
 import './App.css'; // Özel stiller
 import { generateCalendarData } from './calendarUtils';
-import { customRenderer, colorRenderer } from './customRenderers';
-import { afterChange } from './afterChangeHandler';
+import { customRenderer, colorRenderer } from './customRenderers'; // İlgili render fonksiyonları
+import { afterChange } from './afterChangeHandler'; // afterChange fonksiyonu
 import profileImage from './images/socar.png';
 import Reports from './reports';
-import LoginModal from './LoginModal';
 import ModalComponent from './ModalComponent';
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
@@ -16,7 +15,6 @@ function Home() {
   const [selectedMonth, setSelectedMonth] = useState('');
   const [selectedYear, setSelectedYear] = useState('');
   const [calendarData, setCalendarData] = useState([]);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [revisionNumber, setRevisionNumber] = useState(1);
   const [revisionDate, setRevisionDate] = useState('01.15.2024'); // Başlangıç tarihi
@@ -50,16 +48,8 @@ function Home() {
     setSelectedYear(event.target.value);
   };
 
-  const handleProfileClick = () => {
-    setIsLoginModalOpen(true);
-  };
-
   const handleOpenReviewModal = () => {
     setIsReviewModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsLoginModalOpen(false);
   };
 
   const handleCloseReviewModal = () => {
@@ -82,10 +72,10 @@ function Home() {
   return (
     <div className="App">
       <div className="header">
-        <button className="user-profile" onClick={handleProfileClick}>
+        <div className="user-profile">
           <img src={profileImage} alt="Profile" className="profile-image" />
           <div className="username">SOCAR Türkiye</div>
-        </button>
+        </div>
         <div className="user-profile-buttons">
           <Link to="/" className="nav-button nav-button-home">Ana Sayfa</Link>
           <Link to="/reports" className="nav-button">Raporlar</Link>
@@ -180,7 +170,6 @@ function Home() {
           stretchH="all"
         />
       </div>
-      {isLoginModalOpen && <LoginModal onClose={handleCloseModal} />}
       {isReviewModalOpen && (
         <ModalComponent 
           modalIsOpen={isReviewModalOpen} 

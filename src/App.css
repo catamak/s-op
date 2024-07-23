@@ -15,9 +15,9 @@ body, html, #root {
 .header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-between; /* Sağ ve sol tarafı hizala */
   padding: 10px;
-  background: #1f1f1f;
+  background: #3c3c3c;
   position: relative;
   width: 100%;
 }
@@ -62,8 +62,8 @@ body, html, #root {
 /* Ana Sayfa ve Raporlar butonları */
 .user-profile-buttons .nav-button {
   padding: 10px 20px;
-  background-color: white;
-  color: black;
+  background-color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
   text-decoration: none;
   border-radius: 5px;
   transition: background-color 0.3s;
@@ -73,16 +73,12 @@ body, html, #root {
   background-color: gray;
 }
 
-/* Ana Sayfa butonuna boşluk ekleme */
-.user-profile-buttons .nav-button.nav-button-home {
-  margin-left: 15px; /* Kullanıcı adı kısmından biraz boşluk bırak */
-}
-
 /* Profil ve butonları hizalamak için flex container */
 .header-content {
   display: flex;
   align-items: center;
   gap: 20px; /* Profil ve butonlar arasındaki boşluk */
+  margin-right: auto; /* Sol tarafa hizalama */
 }
 
 /* Kontroller kısmı */
@@ -98,32 +94,21 @@ body, html, #root {
 .controls .dropdown-container {
   display: flex;
   gap: 10px;
-  margin-left: 50px; /* Sola doğru konumlandırmak için boşluk ekleyin */
+  /* Ay ve yıl dropdown butonlarını aynı hizada hizala */
+  margin-right: 10px;
 }
 
-/* FormControl bileşenlerini küçültmek için */
+/* FormControl bileşenlerinin stil ayarları */
 .controls .dropdown-container .MuiFormControl-root {
   flex: 1; /* Butonların esnemesini engellemek için flex ayarı */
-  min-width: 20px; /* Minimum genişlik ayarlayarak butonları küçültün */
+  min-width: 100px; /* Minimum genişlik ayarlayarak butonları küçültün */
   font-size: 0.9rem; /* Yazı boyutunu küçültün */
-  height:20px;
+  height: 40px; /* Yüksekliği ayarlayın */
 }
 
-/* FormControl bileşenlerinin içindeki Select bileşeni için stil ayarları */
 .controls .dropdown-container .MuiSelect-root {
   font-size: 0.9rem; /* Yazı boyutunu küçültün */
   padding: 8px; /* İç boşlukları ayarlayın */
-}
-
-
-.controls .dropdown-container .MuiFormControl-root {
-  width: 100px; /* Buton genişliklerini otomatik ayarla */
-  height: 40px;
-}
-
-.controls .dropdown-container .MuiSelect-root {
-  font-size: 14px; /* Küçük font boyutu */
-  padding: 5px; /* Küçük padding */
 }
 
 /* Diğer butonlar */
@@ -132,6 +117,7 @@ body, html, #root {
   gap: 10px;
 }
 
+/* Nav butonları */
 .nav-button {
   padding: 10px 20px;
   background-color: white;
@@ -150,6 +136,7 @@ body, html, #root {
   gap: 10px;
 }
 
+/* Custom dropdown stilleri */
 .custom-dropdown select {
   background-color: #000000;
   color: black;
@@ -257,6 +244,7 @@ body, html, #root {
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(191, 183, 183, 0.1);
 }
+
 /* İçerik kısmının arka plan rengini ayarlama */
 .content {
   background-color: #ffffff;

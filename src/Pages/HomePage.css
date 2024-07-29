@@ -1,0 +1,85 @@
+.home-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.toolbar {
+  display: flex;
+  margin: auto;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1px 5px;
+  background-color: #E4F2E7;
+  border-bottom: 1px solid #ddd;
+}
+
+.toolbar-left {
+ 
+  display: flex;
+  align-items: center;
+}
+
+/* MUI dropdown bileşenlerinin boyutlarını ayarlamak için */
+.toolbar-left .MuiSelect-root {
+  width: 120px; /* Genişlik */
+  height: 40px; /* Yükseklik */
+}
+
+/* MUI dropdown bileşenlerinin kutu içi hizalamasını ayarlamak için */
+.toolbar-left .MuiSelect-select {
+  padding: 8px; /* İç boşluk */
+  line-height: normal; /* Satır yüksekliği */
+}
+/* MUI dropdown butonlarının ve açılır menü öğelerinin arka plan ve metin rengini değiştirmek için */
+.toolbar-left .MuiSelect-root .MuiOutlinedInput-notchedOutline {
+  border-color: #9db0ed; /* Butonun kenar rengi */
+}
+
+.toolbar-left .MuiSelect-select.MuiSelect-outlined {
+  background-color:  #93BFB7; /* Butonun arka plan rengi */
+  color: #fff; /* Butonun metin rengi */
+}
+
+/* MUI dropdown açılır menü öğelerinin arka plan ve metin rengini değiştirmek için */
+.toolbar-left .MuiList-root .MuiListItem-root {
+  background-color:  #93BFB7; /* Menü öğesinin arka plan rengi */
+  color: #fff; /* Menü öğesinin metin rengi */
+}
+
+.toolbar-left .MuiList-root .MuiListItem-root:hover {
+  background-color:  #93BFB7; /* Hover durumunda menü öğesinin arka plan rengi (aynı renk tutmak için) */
+  color: #fff; /* Hover durumunda menü öğesinin metin rengi */
+}
+
+.toolbar .toolbar-item {
+  margin-right: 10px; /* Bileşenler arasında boşluk bırakır */
+}
+
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  margin-left: auto; /* Sağ tarafa hizalar */
+}
+
+.toolbar-info {
+  padding-right: 10px;
+  font-size: 12px;
+  margin-left: 20px; /* Sağdaki bilgi alanı için boşluk */
+  color: #555;
+  display: flex;
+  flex-direction: column;
+}
+
+.toolbar-info {
+  margin-left: 20px;
+  color: #555;
+}
+
+.content {
+  flex: 1;
+  padding: 1px;
+  overflow-y: auto;
+}

@@ -1,0 +1,38 @@
+.reports-page {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
+  }
+  .tables-and-chart {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px;
+  }
+  
+  .table-container {
+    flex: 2;
+    margin-right: 20px;
+  }
+  
+  .summary-table-container {
+    flex: 1;
+  }
+  
+  .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .summary-table th,
+  .summary-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  .summary-table th {
+    background-color: #f5f5f5;
+  }
+  

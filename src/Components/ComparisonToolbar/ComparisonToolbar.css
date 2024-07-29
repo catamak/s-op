@@ -1,0 +1,17 @@
+.reportstoolbar {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: #e5e5f7;
+    padding: 5px 20px;
+    padding-top: 17px;
+    padding-bottom: 17px;
+    margin: auto;
+    background-color: #E4F2E7;
+  }
+  
+  .reportstoolbar .toolbar-item {
+    margin-right: 15px;
+  }
+  

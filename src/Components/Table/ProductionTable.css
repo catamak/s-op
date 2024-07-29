@@ -1,0 +1,137 @@
+body {
+    background-color: white;
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+  }
+  
+  .home-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .navbar, .features, .table {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 20px; /* Sağ ve sol taraflardan boşluk bırakır */
+  }
+  
+  .toolbar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #e5e5f7;
+    padding: 10px 20px;
+    margin-top: 10px;
+  }
+  
+  .toolbar-left,
+  .toolbar-right {
+    display: flex;
+    align-items: center;
+  }
+  
+  .toolbar-info {
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+  }
+  
+  .toolbar-info span {
+    margin-bottom: 5px;
+  }
+  
+  .content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* Tablonun görünümünü iyileştirmek için eklemeler */
+  .handsontable .htCore thead th, .handsontable .htCore tbody td {
+    text-align: center; /* Hücre içeriğini ortala */
+    vertical-align: middle; /* Hücre içeriğini dikey olarak ortala */
+    height: 30px; /* Hücre yüksekliği */
+    font-size: 13px; /* Yazı boyutunu küçült */
+  }
+
+  .cell-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+  }
+  
+  .dropdown, .input {
+    height: 20px; /* Hücre yüksekliği */
+    width: 100%; /* Hücre genişliği */
+    margin: 0;
+    padding: 0;
+    border: none;
+    text-align: center;
+  }
+  
+  .dropdown {
+    font-size: 10px; /* Yazı boyutunu küçült */
+  }
+  
+  .input {
+    font-size: 10px; /* Yazı boyutunu küçült */
+  }
+  
+  .handsontable {
+    width: 100%;
+    overflow-x: hidden; /* Yatay kaydırmayı gizler */
+    background-color: white;
+  }
+  
+  .handsontable .htCore thead th, .handsontable .htCore tbody td {
+    padding: 0; /* Hücre içi boşlukları kaldır */
+  }
+  
+  /* İç kaydırma çubuklarını gizler */
+  .handsontable .ht_master .wtHolder {
+    overflow: hidden !important;
+  }
+  
+/* İlk satırdaki başlıklar için */
+thead tr[aria-rowindex="1"] th {
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  background-color: #387373; /* İlk satır başlıklarının rengi */
+  color: #fff; /* Metin rengi beyaz */
+  
+}
+
+/* Alt başlıklar için */
+thead tr[aria-rowindex="2"] th {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #F1FADA; /* Alt başlık hücrelerinin rengi */
+  color: #000; /* Metin rengi siyah */
+}
+
+.dropdown-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dropdown-container select, .dropdown-container input {
+  width: 100%;
+  border: none;
+  text-align: center;
+}
+
+.dropdown-container select {
+  height: 50%;
+  background-color: inherit;
+}
+
+.dropdown-container input {
+  height: 50%;
+  background-color: white; /* Her zaman beyaz kalacak */
+}

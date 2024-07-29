@@ -1,0 +1,12 @@
+.toolbar {
+  display: flex;
+  justify-content: flex-start; /* Bileşenleri sola hizalar */
+  align-items: center;
+  padding: 2px 5px;
+  background-color: #EEEEEE;
+  border-bottom: 1px solid #ddd;
+}
+
+.toolbar .toolbar-item {
+  margin-right: 10px; /* Bileşenler arasında boşluk bırakır */
+}

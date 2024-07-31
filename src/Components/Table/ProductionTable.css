@@ -126,12 +126,19 @@ thead tr[aria-rowindex="2"] th {
   text-align: center;
 }
 
-.dropdown-container select {
-  height: 50%;
-  background-color: inherit;
+
+.dropdown-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdown-container select,
+.dropdown-container input {
+  border: 1px solid #ccc; /* Çerçeve rengi ve kalınlığı */
+  border-radius: 4px; /* Köşeleri yuvarlatma */
 }
 
 .dropdown-container input {
-  height: 50%;
-  background-color: white; /* Her zaman beyaz kalacak */
+  margin-top: 4px; /* Select ve input arasındaki boşluk */
+  height: 100%;
 }

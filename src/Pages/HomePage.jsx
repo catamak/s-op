@@ -71,7 +71,7 @@ const HomePage = () => {
         <div className="toolbar-left">
           <Box sx={{ minWidth: 120, marginRight: 2 }}>
             <FormControl fullWidth>
-              <InputLabel id="revision-label">Revizyon</InputLabel>
+          
               <Select
                 labelId="revision-label"
                 id="revision-select"
@@ -87,7 +87,7 @@ const HomePage = () => {
           </Box>
           <Box sx={{ minWidth: 120, marginRight: 2 }}>
             <FormControl fullWidth>
-              <InputLabel id="month-label">Ay</InputLabel>
+       
               <Select
                 labelId="month-label"
                 id="month-select"
@@ -112,7 +112,7 @@ const HomePage = () => {
           </Box>
           <Box sx={{ minWidth: 120, marginRight: 2 }}>
             <FormControl fullWidth>
-              <InputLabel id="year-label">Yıl</InputLabel>
+           
               <Select
                 labelId="year-label"
                 id="year-select"

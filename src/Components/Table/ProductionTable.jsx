@@ -6,7 +6,7 @@ import './ProductionTable.css';
 
 const ProductionTable = ({ revision, month, year }) => {
   const [data, setData] = useState([]);
-  const [dropdownData] = useState(['', 'S23/59', 'S27R/63', 'S39/71', 'S65R/68', 'D']); // Example dropdown options
+  const [dropdownData] = useState(['', 'S23/59', 'S27R/63', 'S39/71', 'S65R/68', 'D']);
   const dropdownValues = {
     'S23/59': 115,
     'S27R/63': 120,
@@ -20,7 +20,7 @@ const ProductionTable = ({ revision, month, year }) => {
     'S27R/63': '#FFC0CB', // Pink
     'S39/71': '#ADD8E6', // Light Blue
     'S65R/68': '#ADFF2F', // Green Yellow
-    'D': '#D3D3D3' // Light Gray
+    'D': '#00ff37' // Light Gray
   };
 
   useEffect(() => {
@@ -40,12 +40,12 @@ const ProductionTable = ({ revision, month, year }) => {
   }, [revision, month, year]);
 
   const colHeaders = [
-    'Gün', 'Tarih', '1.Hat', '2.Hat', '3.Hat', '4.Hat', '1.Hat', '2.Hat', 'AYPE-T', 'YYPE', 'PP', 'PTA', 'PA', 'MB'
+    'Gün', 'Tarih', '1.Hat', '2.Hat', '3.Hat', '4.Hat', '1.Hat', '2.Hat', 'AYPE-T', 'YYPE', 'PP1', 'PP2', 'PTA', 'PA', 'MB'
   ];
 
   const nestedHeaders = [
-    [{label: 'Takvim', colspan: 2}, {label: 'PVC Fabrikası', colspan: 4}, {label: 'AYPE Fabrikası', colspan: 2}, 'AYPE-T', 'YYPE', 'PP', 'PTA', 'PA', 'MB'],
-    ['Gün', 'Tarih', '1.Hat', '2.Hat', '3.Hat', '4.Hat', '1.Hat', '2.Hat', '', '', '', '', '', '']
+    [{ label: 'Takvim', colspan: 2 }, { label: 'PVC Fabrikası', colspan: 4 }, { label: 'AYPE Fabrikası', colspan: 2 }, 'AYPE-T', 'YYPE', { label: 'PP', colspan: 2 }, 'PTA', 'PA', 'MB'],
+    ['Gün', 'Tarih', '1.Hat', '2.Hat', '3.Hat', '4.Hat', '1.Hat', '2.Hat', '', '', '1. Hat', '2. Hat', '', '', '']
   ];
 
   const columnSettings = [
@@ -63,6 +63,7 @@ const ProductionTable = ({ revision, month, year }) => {
     { data: 11, renderer: dropdownRenderer, width: 80 },
     { data: 12, renderer: dropdownRenderer, width: 80 },
     { data: 13, renderer: dropdownRenderer, width: 80 },
+    { data: 14, renderer: dropdownRenderer, width: 80 },
   ];
 
   function dropdownRenderer(instance, td, row, col, prop, value, cellProperties) {
@@ -76,31 +77,39 @@ const ProductionTable = ({ revision, month, year }) => {
     input.style.width = '100%';
     input.style.border = 'none';
     input.style.height = '50%';
-    input.style.backgroundColor = 'white'; // Her zaman beyaz
+    input.style.backgroundColor = 'white';
+    input.style.fontSize = '10px'; /* Yazı boyutu küçültülmüş */
+    input.style.fontWeight = 'bold'; /* Yazı kalınlaştırılmış */
 
     select.style.width = '100%';
     select.style.height = '50%';
-    select.value = value || ''; // Seçili değeri ayarla
+    select.value = value || '';
+    select.style.fontSize = '10px'; /* Yazı boyutu küçültülmüş */
+    select.style.fontWeight = 'bold'; /* Yazı kalınlaştırılmış */
 
     dropdownData.forEach(option => {
       const optionElement = document.createElement('option');
       optionElement.value = option;
       optionElement.text = option;
+      optionElement.style.backgroundColor = dropdownColors[option] || 'white';
       select.appendChild(optionElement);
     });
 
-    select.onchange = function() {
+    select.onchange = function () {
       const selectedValue = this.value;
-      input.value = dropdownValues[selectedValue];
-      instance.setDataAtCell(row, col, selectedValue); // Değeri ayarla
-      select.style.backgroundColor = dropdownColors[selectedValue]; // Dropdown arka plan rengini değiştir
+      input.value = dropdownValues[selectedValue] || '';
+      instance.setDataAtCell(row, col, selectedValue);
+      updateColumnValues(instance, col, selectedValue);
+      select.style.backgroundColor = dropdownColors[selectedValue] || 'white';
+      select.selectedIndex = dropdownData.indexOf(selectedValue);
     };
 
     if (dropdownColors[value]) {
       select.style.backgroundColor = dropdownColors[value];
     } else {
-      select.style.backgroundColor = ''; // Varsayılan arka plan rengi
+      select.style.backgroundColor = 'white';
     }
+    select.selectedIndex = dropdownData.indexOf(value);
 
     td.innerHTML = '';
     const container = document.createElement('div');
@@ -108,6 +117,43 @@ const ProductionTable = ({ revision, month, year }) => {
     container.appendChild(select);
     container.appendChild(input);
     td.appendChild(container);
+  }
+
+  function inputRenderer(instance, td, row, col, prop, value, cellProperties) {
+    Handsontable.renderers.TextRenderer.apply(this, arguments);
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = value || '';
+    input.style.width = '100%';
+    input.style.border = 'none';
+    input.style.height = '50%';
+    input.style.backgroundColor = 'white';
+    input.style.fontSize = '10px'; /* Yazı boyutu küçültülmüş */
+    input.style.fontWeight = 'bold'; /* Yazı kalınlaştırılmış */
+
+    input.onchange = function () {
+      const newValue = this.value;
+      instance.setDataAtCell(row, col, newValue);
+      updateColumnValues(instance, col, newValue);
+    };
+
+    td.innerHTML = '';
+    td.appendChild(input);
+  }
+
+  function updateColumnValues(instance, col, value) {
+    const rowCount = instance.countRows();
+    for (let row = 0; row < rowCount; row++) {
+      if (instance.getDataAtCell(row, col) !== value) {
+        instance.setDataAtCell(row, col, value);
+        const cell = instance.getCell(row, col);
+        const input = cell.querySelector('input');
+        if (input) {
+          input.value = value;
+        }
+      }
+    }
   }
 
   return (

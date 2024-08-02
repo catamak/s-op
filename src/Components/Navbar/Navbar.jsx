@@ -23,7 +23,7 @@ const Navbar = () => {
           Raporlar
         </Link>
         <div className="navbar-profile">
-          <div className="navbar-profile-name">Aytac Bagirova</div>
+          <div className="navbar-profile-name">Username</div>
           <img className="navbar-profile-img" src={profile} alt="Profile" />
           
         </div>

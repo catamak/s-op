@@ -19,6 +19,7 @@ const HomePage = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [tableData, setTableData] = useState([]);
+  const [showReviewAndPublishButtons, setShowReviewAndPublishButtons] = useState(false);
 
   useEffect(() => {
     const currentDate = new Date();
@@ -43,6 +44,7 @@ const HomePage = () => {
       setFormStatus('submitted');
       setSnackbarMessage('Form başarıyla ilerletildi.');
       setSnackbarOpen(true);
+      setShowReviewAndPublishButtons(true); // Show review and publish buttons
     } else {
       setSnackbarMessage('Lütfen tüm dropdown değerlerini seçiniz.');
       setSnackbarOpen(true);
@@ -53,6 +55,7 @@ const HomePage = () => {
     setFormStatus('inReview');
     setSnackbarMessage('Form görüşe gönderildi.');
     setSnackbarOpen(true);
+    setOpen(true); // Open RevisionDialog when sending for review
   };
 
   const handlePublishRevision = () => {
@@ -78,10 +81,15 @@ const HomePage = () => {
     );
   };
 
+  const handleCategoryDelete = (category) => {
+    setSelectedCategories(selectedCategories.filter(c => c !== category));
+  };
+
   const handleNewRevision = () => {
     setRevision(prev => prev + 1);
     setFormStatus('draft');
     setTableData([]);
+    setShowReviewAndPublishButtons(false); // Hide review and publish buttons when a new revision is created
     setSnackbarMessage('Yeni revizyon oluşturuldu.');
     setSnackbarOpen(true);
   };
@@ -116,6 +124,7 @@ const HomePage = () => {
         selectedCategories={selectedCategories}
         handleFactoryChange={handleFactoryChange}
         handleCategoryChange={handleCategoryChange}
+        handleCategoryDelete={handleCategoryDelete}
         factoryRevisionText={factoryRevisionText}
         setFactoryRevisionText={setFactoryRevisionText}
         categoryRevisionText={categoryRevisionText}
@@ -127,6 +136,12 @@ const HomePage = () => {
           {snackbarMessage}
         </Alert>
       </Snackbar>
+      {showReviewAndPublishButtons && (
+        <div className="action-buttons">
+          <button onClick={handleSendForReview}>Görüşe Yolla</button>
+          <button onClick={handlePublishRevision}>Revizyonu Yayınla</button>
+        </div>
+      )}
     </div>
   );
 };

@@ -50,8 +50,6 @@ const RevisionDialog = ({
     handleCategoryDelete, // Kategori silme fonksiyonu
     factoryRevisionText,
     setFactoryRevisionText,
-    categoryRevisionText,
-    setCategoryRevisionText,
     handleSendForReview
 }) => {
     return (
@@ -134,20 +132,20 @@ const RevisionDialog = ({
                                 onChange={(e) => setFactoryRevisionText(e.target.value)}
                             />
                             <div className="revision-buttons">
-                                <Button variant="contained" sx={{ backgroundColor: '#76ABAE', color: 'white', '&:hover': { backgroundColor: '#608D90' } }}>Kaydet</Button>
-                                <Button variant="contained" sx={{ backgroundColor: '#76ABAE', color: 'white', '&:hover': { backgroundColor: '#608D90' } }}>Düzenle</Button>
-                            </div>
-                        </div>
-                        <div className="revision-text-section">
-                            <InputLabel>Revizyon Açıklaması</InputLabel>
-                            <textarea
-                                className="revision-textarea"
-                                value={categoryRevisionText}
-                                onChange={(e) => setCategoryRevisionText(e.target.value)}
-                            />
-                            <div className="revision-buttons">
-                                <Button variant="contained" sx={{ backgroundColor: '#76ABAE', color: 'white', '&:hover': { backgroundColor: '#608D90' } }}>Kaydet</Button>
-                                <Button variant="contained" sx={{ backgroundColor: '#76ABAE', color: 'white', '&:hover': { backgroundColor: '#608D90' } }}>Düzenle</Button>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => alert('Kaydet butonuna tıklandı!')}
+                                >
+                                    Kaydet
+                                </Button>
+                                <Button
+                                    variant="outlined"
+                                    color="secondary"
+                                    onClick={() => alert('Düzenle butonuna tıklandı!')}
+                                >
+                                    Düzenle
+                                </Button>
                             </div>
                         </div>
                     </div>
@@ -155,7 +153,7 @@ const RevisionDialog = ({
                         <InputLabel>Seçilen Fabrika ve Kategoriler</InputLabel>
                         <textarea
                             className="selected-info-textarea"
-                            value={`Fabrika: ${selectedFactory}\nKategoriler: ${selectedCategories.join(', ')}`}
+                            value={`Fabrika: ${selectedFactory}\nKategoriler: ${selectedCategories.join(', ')}\nRevizyon Açıklaması: ${factoryRevisionText}`}
                             readOnly
                         />
                     </div>

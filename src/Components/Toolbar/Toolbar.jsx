@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FormControl, InputLabel, Select, MenuItem, Button, Box } from '@mui/material';
 import './Toolbar.css';
 
@@ -11,6 +11,13 @@ const Toolbar = ({
   handlePublishRevision, 
   handleNewRevision 
 }) => {
+  const [showAdvancedButtons, setShowAdvancedButtons] = useState(false);
+
+  const handleAdvanceForm = () => {
+    setShowAdvancedButtons(true);
+    handleSubmitForm(); // Trigger any necessary logic or form submission
+  };
+
   return (
     <div className="toolbar">
       <div className="toolbar-left">
@@ -74,21 +81,36 @@ const Toolbar = ({
         </Box>
       </div>
       <div className="toolbar-right">
-        {formStatus === 'published' ? (
-          <Button 
-            variant="contained" 
-            sx={{ 
-              backgroundColor: ' #93BFB7', 
-              color: 'white',
-              '&:hover': {
-                backgroundColor: '#608D90'
-              },
-              marginRight: 2 
-            }}
-            onClick={handleNewRevision}
-          >
-            Revize Oluştur
-          </Button>
+        {!showAdvancedButtons ? (
+          <>
+            <Button 
+              variant="contained" 
+              sx={{ 
+                backgroundColor: '#93BFB7', 
+                color: 'white',
+                '&:hover': {
+                  backgroundColor: '#608D90'
+                },
+                marginRight: 2 
+              }}
+              onClick={handleSubmitForm}
+            >
+              Taslak Kaydet
+            </Button>
+            <Button 
+              variant="contained" 
+              sx={{ 
+                backgroundColor: '#93BFB7', 
+                color: 'white',
+                '&:hover': {
+                  backgroundColor: '#608D90'
+                }
+              }}
+              onClick={handleAdvanceForm}
+            >
+              Formu İlerlet
+            </Button>
+          </>
         ) : (
           <>
             <Button 
@@ -108,7 +130,7 @@ const Toolbar = ({
             <Button 
               variant="contained" 
               sx={{ 
-                backgroundColor: ' #93BFB7', 
+                backgroundColor: '#93BFB7', 
                 color: 'white',
                 '&:hover': {
                   backgroundColor: '#608D90'
@@ -122,7 +144,7 @@ const Toolbar = ({
             <Button 
               variant="contained" 
               sx={{ 
-                backgroundColor: ' #93BFB7', 
+                backgroundColor: '#93BFB7', 
                 color: 'white',
                 '&:hover': {
                   backgroundColor: '#608D90'

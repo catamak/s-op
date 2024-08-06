@@ -2,47 +2,43 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  width: 100%;
-  overflow-x: hidden;
 }
 
 .tables-and-chart {
   display: flex;
-  justify-content: space-between; /* Eşit alan kullanımı sağlar */
-  align-items: flex-start;
+  flex: 1;
+}
+
+.table-container {
+  flex: 1;
   padding: 20px;
+  overflow: auto;
 }
 
-.table-container,
-.summary-table-container {
-  flex: 1; /* Her iki tabloya da eşit genişlik verir */
-  margin-right: 20px;
+.chart-and-summary-container {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
 }
 
 .summary-table-container {
-  margin-right: 0; /* Sağ boşluğu kaldırır */
+  flex: 1;
 }
 
 .summary-table {
   width: 100%;
   border-collapse: collapse;
-  font-family: 'Times New Roman', Times, serif; /* Fontu değiştir */
 }
 
 .summary-table th,
 .summary-table td {
   border: 1px solid #ddd;
   padding: 8px;
+  text-align: center;
 }
 
 .summary-table th {
-  background-color: #f5f5f5;
-  font-weight: bold; /* Başlıkların kalın olmasını sağlar */
-  font-size: 1em; /* Başlık yazı boyutunu normal yapar */
-}
-
-.summary-table td {
-  text-align: center; /* Yazıyı ortalar */
-  font-weight: 400; /* Diğer hücrelerin yazısını normal kalınlıkta yapar */
-  font-size: 0.8em; /* Diğer hücrelerde yazı boyutunu küçültür */
+  background-color: #f4f4f4;
 }

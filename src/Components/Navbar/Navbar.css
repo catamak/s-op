@@ -1,3 +1,4 @@
+/* Navbar genel stili */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -9,66 +10,126 @@
   box-sizing: border-box;
 }
 
+/* Sol kısmı düzenler */
 .navbar-left {
   display: flex;
   align-items: center;
 }
 
+/* Logo */
 .navbar-logo {
   height: 27px;
   margin-right: 30px;
 }
 
+/* Başlık */
 .navbar-title {
   font-family: "Poppins", sans-serif;
   font-weight: 700;
   font-style: normal;
 }
 
+/* Sağ kısmı düzenler */
 .navbar-right {
   display: flex;
   align-items: center;
 }
 
-.navbar-link {
-  margin-right: 2px;
+/* Genel buton stili */
+.navbar-button {
+  margin-right: 10px; /* Butonlar arasında boşluk */
   color: white;
   text-decoration: none;
   display: flex;
   align-items: center;
+  padding: 10px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700; /* Kalın yazı */
+  font-size: 16px; /* Yazı boyutu */
+  background: none; /* Arka plan rengi */
+  border: none; /* Kenar rengi */
+  cursor: pointer; /* İmleç işareti */
 }
-.svg-inline--fa{
+
+/* FontAwesome ikonları */
+.svg-inline--fa {
   margin-right: 10px;
   margin-bottom: 5px;
   height: 1.2rem;
 }
-.navbar-link:hover {
+
+/* Hover durumunda buton */
+.navbar-button:hover {
   text-decoration: underline;
 }
 
-.navbar-profile {
-  padding-top: 5px;
-  padding-bottom: 5px;
+/* Dropdown menüsü */
+.navbar-dropdown {
+  position: relative;
+}
+
+.navbar-dropdown .dropdown-toggle {
+  background: none;
+  border: none;
   color: white;
-  margin-right: 5px;
+  font-size: 16px;
+  font-weight: 700;
   display: flex;
   align-items: center;
-  padding-left: 8px;
+  cursor: pointer;
+  padding: 10px;
+
+}
+
+/* Dropdown menü */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
   background-color: #387373;
-  margin-left:5px ;
+  border: 1px solid #555;
+  border-radius: 5px;
+  margin-top: 5px;
+  z-index: 1000;
+  width: 150px;
+  display: none; /* Varsayılan olarak gizli */
+}
+
+/* Dropdown menüsü açıkken */
+.dropdown-menu.show {
+  display: block; /* Göster */
+}
+
+/* Dropdown menü öğeleri */
+.dropdown-item {
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+/* Dropdown menü öğeleri üzerinde hover */
+.dropdown-item:hover {
+  background-color: #555;
+}
+
+/* Profil kısmı */
+.navbar-profile {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  background-color: #387373;
   border-radius: 8px;
 }
 
 .navbar-profile-img {
-  
   height: 2.5rem;
-  width: 2.5rem; 
+  width: 2.5rem;
   border: 3px solid #E4F2E7;
-  margin-left: 10px;/* Yüksekliği ve genişliği eşitleyerek yuvarlak görünüm sağlanır */
-  margin-right: 10px;
-  border-radius: 50%; /* Profil fotoğrafının yuvarlak görünmesini sağlar */
-  overflow: hidden; /* Taşmaları önler */
-  object-fit: cover; /* Fotoğrafın oranlarını koruyarak doğru şekilde kırpılmasını sağlar */
+  border-radius: 50%;
+  object-fit: cover;
+  margin-left: 10px;
 }
 
 .navbar-profile-name {

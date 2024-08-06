@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FormControl, InputLabel, Select, MenuItem, Button, Box } from '@mui/material';
+import { FormControl, Select, MenuItem, Button, Box } from '@mui/material';
 import './Toolbar.css';
 
 const Toolbar = ({ 
@@ -23,13 +23,13 @@ const Toolbar = ({
       <div className="toolbar-left">
         <Box sx={{ minWidth: 120, marginRight: 2 }}>
           <FormControl fullWidth>
-            <InputLabel id="month-label">Ay</InputLabel>
             <Select
-              labelId="month-label"
               id="month-select"
               value={month}
-              label="Ay"
               onChange={(e) => setMonth(e.target.value)}
+              displayEmpty
+              inputProps={{ 'aria-label': 'Ay' }}
+              sx={{ fontSize: 16 }}
             >
               <MenuItem value={1}>Ocak</MenuItem>
               <MenuItem value={2}>Şubat</MenuItem>
@@ -48,13 +48,13 @@ const Toolbar = ({
         </Box>
         <Box sx={{ minWidth: 120, marginRight: 2 }}>
           <FormControl fullWidth>
-            <InputLabel id="year-label">Yıl</InputLabel>
             <Select
-              labelId="year-label"
               id="year-select"
               value={year}
-              label="Yıl"
               onChange={(e) => setYear(e.target.value)}
+              displayEmpty
+              inputProps={{ 'aria-label': 'Yıl' }}
+              sx={{ fontSize: 16 }}
             >
               <MenuItem value={2022}>2022</MenuItem>
               <MenuItem value={2023}>2023</MenuItem>
@@ -65,13 +65,13 @@ const Toolbar = ({
         </Box>
         <Box sx={{ minWidth: 120, marginRight: 2 }}>
           <FormControl fullWidth>
-            <InputLabel id="revision-label">Revizyon</InputLabel>
             <Select
-              labelId="revision-label"
               id="revision-select"
               value={revision}
-              label="Revizyon"
               onChange={(e) => setRevision(e.target.value)}
+              displayEmpty
+              inputProps={{ 'aria-label': 'Revizyon' }}
+              sx={{ fontSize: 16 }}
             >
               {[...Array(revision + 1).keys()].map(i => (
                 <MenuItem key={i} value={i}>Revizyon {i}</MenuItem>

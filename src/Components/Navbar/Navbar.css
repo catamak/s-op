@@ -61,11 +61,16 @@
 /* Hover durumunda buton */
 .navbar-button:hover {
   text-decoration: underline;
+  background-color: rgba(255, 255, 255, 0.1); /* Hover arka plan rengi */
 }
 
 /* Dropdown menüsü */
 .navbar-dropdown {
   position: relative;
+
+}.navbar-dropdown:hover{
+  text-decoration: underline;
+  background-color: rgba(255, 255, 255, 0.1); /* Hover arka plan rengi */
 }
 
 .navbar-dropdown .dropdown-toggle {
@@ -77,9 +82,9 @@
   display: flex;
   align-items: center;
   cursor: pointer;
-  padding: 10px;
-
-}
+  padding: 16px;
+font-family: "Poppins", sans-serif;
+}  
 
 /* Dropdown menü */
 .dropdown-menu {
@@ -99,15 +104,16 @@
 .dropdown-menu.show {
   display: block; /* Göster */
 }
-
 /* Dropdown menü öğeleri */
 .dropdown-item {
   color: white;
   text-decoration: none;
   display: flex;
   align-items: center;
-  padding: 10px;
+  padding: 5px; /* Küçültülmüş padding */
+  font-size: 12px; /* Küçültülmüş yazı boyutu */
 }
+
 
 /* Dropdown menü öğeleri üzerinde hover */
 .dropdown-item:hover {

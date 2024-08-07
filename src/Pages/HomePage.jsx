@@ -7,7 +7,7 @@ import RevisionDialog from '../Components/RevisionDialog/RevisionDialog';
 import './HomePage.css';
 
 const HomePage = () => {
-  const [revision, setRevision] = useState(-1);
+  const [revision, setRevision] = useState(-1); // Revizyon numarasını saklar
   const [month, setMonth] = useState('');
   const [year, setYear] = useState('');
   const [formStatus, setFormStatus] = useState('draft');
@@ -44,7 +44,7 @@ const HomePage = () => {
       setFormStatus('submitted');
       setSnackbarMessage('Form başarıyla ilerletildi.');
       setSnackbarOpen(true);
-      setShowReviewAndPublishButtons(true); // Show review and publish buttons
+      setShowReviewAndPublishButtons(true); // İnceleme ve yayınlama butonlarını gösterir
     } else {
       setSnackbarMessage('Lütfen tüm dropdown değerlerini seçiniz.');
       setSnackbarOpen(true);
@@ -55,10 +55,11 @@ const HomePage = () => {
     setFormStatus('inReview');
     setSnackbarMessage('Form görüşe gönderildi.');
     setSnackbarOpen(true);
-    setOpen(true); // Open RevisionDialog when sending for review
+    setOpen(true); // İnceleme diyalog penceresini açar
   };
 
   const handlePublishRevision = () => {
+    setRevision(prev => prev + 1); // Revizyon numarasını 1 artırır
     setFormStatus('published');
     setSnackbarMessage('Revizyon yayınlandı.');
     setSnackbarOpen(true);
@@ -86,10 +87,10 @@ const HomePage = () => {
   };
 
   const handleNewRevision = () => {
-    setRevision(prev => prev + 1);
+    setRevision(prev => prev + 1); // Yeni revizyon oluştururken mevcut revizyon numarasını 1 artırır
     setFormStatus('draft');
     setTableData([]);
-    setShowReviewAndPublishButtons(false); // Hide review and publish buttons when a new revision is created
+    setShowReviewAndPublishButtons(false); // İnceleme ve yayınlama butonlarını gizler
     setSnackbarMessage('Yeni revizyon oluşturuldu.');
     setSnackbarOpen(true);
   };

@@ -10,34 +10,46 @@ const ReportsPage = () => {
   const [revision1, setRevision1] = useState('');
   const [revision2, setRevision2] = useState('');
 
-  const tableData = [
-    { factory: 'PVC', product: 'S23/59', rev1: 22, rev2: 15, diff: 17.5, conformity: 84.1 },
-    // Diğer veri satırları...
-  ];
-
-  const chartData = {
-    labels: ['Uyum 1', 'Uyum 2', 'Uyum 3', 'Uyum 4', 'Uyum 5', 'Uyum 6'],
-    datasets: [
-      {
-        label: 'PVC',
-        data: [85, 88, 89, 91, 92, 90],
-        borderColor: 'blue',
-        fill: false,
-      },
-      {
-        label: 'AYPE',
-        data: [97, 97, 97, 97, 97, 97],
-        borderColor: 'red',
-        fill: false,
-      },
-      // Diğer veri setleri...
-    ],
+  // Tablo verilerini güncelleme
+  const getTableData = () => {
+    // Revizyon değerlerine göre tabloyu dinamik olarak güncelleyin
+    return [
+      { factory: 'PVC', product: 'S23/59', rev1: revision1 || 22, rev2: revision2 || 15, diff: 17.5, conformity: 84.1 },
+      // Diğer veri satırlarını güncelleyin
+    ];
   };
 
-  const summaryTableData = [
-    { factory: 'AYPE', conformity: [97, 97, 97, 97, 97, 97, 97] },
-    // Diğer veri satırları...
-  ];
+  // Grafik verilerini güncelleme
+  const getChartData = () => {
+    // Revizyon değerlerine göre grafik verilerini güncelleyin
+    return {
+      labels: ['Uyum 1', 'Uyum 2', 'Uyum 3', 'Uyum 4', 'Uyum 5', 'Uyum 6'],
+      datasets: [
+        {
+          label: 'PVC',
+          data: [85, 88, 89, 91, 92, 90], // Dinamik verilerle güncelleyin
+          borderColor: 'blue',
+          fill: false,
+        },
+        {
+          label: 'AYPE',
+          data: [97, 97, 97, 97, 97, 97], // Dinamik verilerle güncelleyin
+          borderColor: 'red',
+          fill: false,
+        },
+        // Diğer veri setlerini dinamik olarak güncelleyin
+      ],
+    };
+  };
+
+  // Özet tablo verilerini güncelleme
+  const getSummaryTableData = () => {
+    // Revizyon değerlerine göre özet tabloyu dinamik olarak güncelleyin
+    return [
+      { factory: 'AYPE', conformity: [97, 97, 97, 97, 97, 97, 97] },
+      // Diğer veri satırlarını dinamik olarak güncelleyin
+    ];
+  };
 
   return (
     <div className="reports-page">
@@ -52,12 +64,12 @@ const ReportsPage = () => {
       />
       <div className="tables-and-chart">
         <div className="table-container">
-          <ComparisonTable title="UYUM TAKİBİ" data={tableData} />
+          <ComparisonTable title="UYUM TAKİBİ" data={getTableData()} />
         </div>
         <div className="chart-and-summary-container">
           <div className="summary-table-container">
             <h2>UYUM ÇİZELGESİ</h2>
-            <ComparisonChart title="UYUM ÇİZELGESİ" data={chartData} />
+            <ComparisonChart title="UYUM ÇİZELGESİ" data={getChartData()} />
             <table className="summary-table">
               <thead>
                 <tr>
@@ -72,7 +84,7 @@ const ReportsPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {summaryTableData.map((row, index) => (
+                {getSummaryTableData().map((row, index) => (
                   <tr key={index}>
                     <td>{row.factory}</td>
                     {row.conformity.map((conformity, i) => (

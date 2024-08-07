@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import { Line } from 'react-chartjs-2';
+import 'chart.js/auto';
 import Navbar from '../Components/Navbar/Navbar';
 import Toolbar from '../Components/ComparisonToolbar/ComparisonToolbar';
-import ComparisonChart from '../Components/ComparisonChart/ComparisonChart';
 import './ReportsPage.css';
 
 const UyumCizelgesiPage = () => {
@@ -16,23 +17,71 @@ const UyumCizelgesiPage = () => {
         label: 'PVC',
         data: [85, 88, 89, 91, 92, 90],
         borderColor: 'blue',
-        fill: false,
+        backgroundColor: 'rgba(0, 0, 255, 0.1)',
+        fill: true,
       },
-      // Diğer veri setleri...
+      {
+        label: 'AYPE',
+        data: [95, 92, 90, 93, 94, 92],
+        borderColor: 'red',
+        backgroundColor: 'rgba(255, 0, 0, 0.1)',
+        fill: true,
+      },
+      {
+        label: 'AYPE-T',
+        data: [88, 86, 87, 85, 90, 92],
+        borderColor: 'green',
+        backgroundColor: 'rgba(0, 255, 0, 0.1)',
+        fill: true,
+      },
+      {
+        label: 'YYPE',
+        data: [78, 79, 80, 83, 85, 87],
+        borderColor: 'cyan',
+        backgroundColor: 'rgba(0, 255, 255, 0.1)',
+        fill: true,
+      },
+      {
+        label: 'PP',
+        data: [68, 70, 72, 74, 75, 78],
+        borderColor: 'pink',
+        backgroundColor: 'rgba(0, 0, 0, 0.1)',
+        fill: true,
+      },
+      {
+        label: 'PTA',
+        data: [55, 57, 60, 62, 65, 68],
+        borderColor: 'orange',
+        backgroundColor: 'rgba(255, 165, 0, 0.1)',
+        fill: true,
+      },
+      {
+        label: 'PA',
+        data: [48, 50, 52, 54, 55, 57],
+        borderColor: 'purple',
+        backgroundColor: 'rgba(128, 0, 128, 0.1)',
+        fill: true,
+      },
+      {
+        label: 'MB',
+        data: [40, 42, 45, 48, 50, 52],
+        borderColor: 'yellow',
+        backgroundColor: 'rgba(165, 42, 42, 0.1)',
+        fill: true,
+      },
     ],
   };
 
   const summaryTableData = [
     { factory: 'AYPE', conformity: [97, 97, 97, 97, 97, 97, 97] },
-    { factory: 'AYPE-T', conformity: [96, 97, 98, 97, 95, 94, 96] },
-    { factory: 'PP', conformity: [90, 91, 89, 88, 92, 93, 94] },
-    { factory: 'YYPE', conformity: [85, 86, 87, 88, 89, 90, 91] },
-    { factory: 'MB', conformity: [80, 81, 82, 83, 84, 85, 86] },
-    { factory: 'PTA', conformity: [75, 76, 77, 78, 79, 80, 81] },
-    { factory: 'PA', conformity: [70, 71, 72, 73, 74, 75, 76] }
+    { factory: 'AYPE-T', conformity: [83, 83, 79, 62, 62, 62, 62] },
+    { factory: 'MB', conformity: [94, 94, 94, 94, 94, 94, 94] },
+    { factory: 'PA', conformity: [66, 66, 66, 66, 66, 66, 66] },
+    { factory: 'PP', conformity: [55, 55, 55, 55, 55, 55, 55] },
+    { factory: 'PTA', conformity: [77, 77, 77, 77, 77, 77, 77] },
+    { factory: 'PVC', conformity: [67, 67, 67, 67, 67, 67, 67] },
   ];
-  
-      
+
   return (
     <div className="reports-page">
       <Navbar />
@@ -47,7 +96,7 @@ const UyumCizelgesiPage = () => {
       <div className="tables-and-chart">
         <div className="summary-table-container">
           <h2>UYUM ÇİZELGESİ</h2>
-          <ComparisonChart title="UYUM ÇİZELGESİ" data={chartData} />
+          <Line data={chartData} />
           <table className="summary-table">
             <thead>
               <tr>

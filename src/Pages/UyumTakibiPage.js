@@ -9,6 +9,7 @@ const UyumTakibiPage = () => {
   const [revision1, setRevision1] = useState('');
   const [revision2, setRevision2] = useState('');
 
+
   const tableData = [
     { factory: 'PVC', product: 'S23/59', rev1: 22, rev2: 15, diff: 17.5, conformity: 84.1 },
     // Diğer veri satırla 
@@ -65,7 +66,18 @@ const UyumTakibiPage = () => {
     { factory: 'PA', product: 'D', rev1: 1, rev2: 0, diff: 0, compliance: 0 },
     { factory: 'PA', product: 'PA (%50)', rev1: 0, rev2: 0, diff: 0, compliance: 0 },
   ];
-  
+
+  // Revizyon başlıklarını belirle
+  const getRevisionLabel = (revision) => {
+    switch (revision) {
+      case -1: return 'Revizyon -1';
+      case 0: return 'Revizyon 0';
+      case 1: return 'Revizyon 1';
+      case 2: return 'Revizyon 2';
+      case 3: return 'Revizyon 3';
+      default: return '';
+    }
+  };
 
   return (
     <div className="reports-page">
@@ -80,8 +92,12 @@ const UyumTakibiPage = () => {
       />
       <div className="tables-and-chart">
         <div className="table-container">
-          <ComparisonTable title="UYUM TAKİBİ" data={tableData} />
-          
+          <ComparisonTable
+            title="UYUM TAKİBİ"
+            data={tableData}
+            rev1Label={getRevisionLabel(revision1)}
+            rev2Label={getRevisionLabel(revision2)}
+          />
         </div>
       </div>
     </div>

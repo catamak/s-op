@@ -6,37 +6,79 @@ import './ProductionTable.css';
 
 const ProductionTable = React.memo(({ revision, month, year, updateTableData }) => {
   const [data, setData] = useState([]);
-  const dropdownData = useMemo(() => ['', 'S23/59', 'S27R/63', 'S39/71', 'S65R/68', 'D'], []);
-  
-  const dropdownValues = useMemo(() => ({
-    'S23/59': 115,
-    'S27R/63': 120,
-    'S39/71': 125,
-    'S65R/68': 110,
-    'D': 0
-  }), []);
-  
-  const dropdownColors = useMemo(() => ({
-    'S23/59': '#FFA500', // Orange
-    'S27R/63': '#FFC0CB', // Pink
-    'S39/71': '#ADD8E6', // Light Blue
-    'S65R/68': '#ADFF2F', // Green Yellow
-    'D': '#00ff37' // Light Gray
-  }), []);
+  const [colHeaders, setColHeaders] = useState(['Gün', 'Tarih']);
+  const [nestedHeaders, setNestedHeaders] = useState([['Gün', 'Tarih']]);
+  const [factoriesData, setFactoriesData] = useState([]);
+  const [dropdownData, setDropdownData] = useState({});
+  const [dropdownValues, setDropdownValues] = useState({});
+  const [dropdownColors, setDropdownColors] = useState({});
 
   useEffect(() => {
-    if (month && year) {
-      const daysInMonth = new Date(year, month, 0).getDate();
-      const newData = Array.from({ length: daysInMonth }, (_, i) => {
-        const currentDate = new Date(year, month - 1, i + 1);
-        const dayName = currentDate.toLocaleDateString('tr-TR', { weekday: 'long' });
-        const formattedDate = currentDate.toLocaleDateString('tr-TR');
-        return [dayName, formattedDate, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''];
-      });
+    fetch('https://localhost:7032/api/Factories')
+      .then(response => response.json())
+      .then(data => {
+        console.log('Factories Data:', data); // Konsola veriyi yazdırma
+        setFactoriesData(data);
 
-      setData(newData);
-    }
-  }, [revision, month, year]);
+        // Dinamik olarak tablo başlıklarını oluşturuyoruz
+        const factoryHeaders = [];
+        const nestedFactoryHeaders = [{ label: 'Takvim', colspan: 2 }];
+
+        data.forEach(factory => {
+          const lineNames = factory.productLines.map(line => line.line_Name);
+          factoryHeaders.push(...lineNames);
+          nestedFactoryHeaders.push({ label: factory.factory_Name, colspan: lineNames.length });
+        });
+
+        setColHeaders(['Gün', 'Tarih', ...factoryHeaders]);
+        setNestedHeaders([nestedFactoryHeaders, ['Gün', 'Tarih', ...factoryHeaders]]);
+
+        if (month && year) {
+          const daysInMonth = new Date(year, month, 0).getDate();
+          const newData = Array.from({ length: daysInMonth }, (_, i) => {
+            const currentDate = new Date(year, month - 1, i + 1);
+            const dayName = currentDate.toLocaleDateString('tr-TR', { weekday: 'long' });
+            const formattedDate = currentDate.toLocaleDateString('tr-TR');
+
+            // Gün ve Tarih bilgisiyle birlikte tablo verilerini oluşturuyoruz
+            return [dayName, formattedDate];
+          });
+
+          setData(newData);
+        }
+
+        // Dropdown verilerini hazırlıyoruz
+        const dropdownDataMap = {};
+        data.forEach(factory => {
+          factory.productLines.forEach(line => {
+            dropdownDataMap[line.line_Name] = line.factoryProducts.map(product => product.product_Name);
+          });
+        });
+        setDropdownData(dropdownDataMap);
+      })
+      .catch(error => console.error('API çağrısında hata oluştu:', error));
+  }, [month, year]);
+
+  useEffect(() => {
+    fetch('https://localhost:7032/api/Values')
+      .then(response => response.json())
+      .then(data => {
+        console.log('Dropdown Data:', data); // Konsola veriyi yazdırma
+        const dropdownMap = {};
+        data.forEach(item => {
+          dropdownMap[item.Value] = item.SomeNumericValue;  // Veritabanındaki uygun alanı kullanın
+        });
+
+        const dropdownColorMap = {};
+        data.forEach(item => {
+          dropdownColorMap[item.Value] = item.SomeColorValue;  // Veritabanındaki uygun alanı kullanın
+        });
+
+        setDropdownValues(dropdownMap);
+        setDropdownColors(dropdownColorMap);
+      })
+      .catch(error => console.error('API çağrısında hata oluştu:', error));
+  }, []);
 
   useEffect(() => {
     updateTableData(data);
@@ -54,16 +96,19 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
     input.style.border = 'none';
     input.style.height = '50%';
     input.style.backgroundColor = 'white';
-    input.style.fontSize = '10px'; /* Yazı boyutu küçültülmüş */
-    input.style.fontWeight = 'bold'; /* Yazı kalınlaştırılmış */
+    input.style.fontSize = '10px';
+    input.style.fontWeight = 'bold';
 
     select.style.width = '100%';
     select.style.height = '50%';
     select.value = value || '';
-    select.style.fontSize = '10px'; /* Yazı boyutu küçültülmüş */
-    select.style.fontWeight = 'bold'; /* Yazı kalınlaştırılmış */
+    select.style.fontSize = '10px';
+    select.style.fontWeight = 'bold';
 
-    dropdownData.forEach(option => {
+    const lineName = colHeaders[col];
+    const options = dropdownData[lineName] || [];
+
+    options.forEach(option => {
       const optionElement = document.createElement('option');
       optionElement.value = option;
       optionElement.text = option;
@@ -91,7 +136,7 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
         }
       });
       select.style.backgroundColor = dropdownColors[selectedValue] || 'white';
-      select.selectedIndex = dropdownData.indexOf(selectedValue);
+      select.selectedIndex = options.indexOf(selectedValue);
     };
 
     input.onchange = function () {
@@ -115,7 +160,7 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
     } else {
       select.style.backgroundColor = 'white';
     }
-    select.selectedIndex = dropdownData.indexOf(value);
+    select.selectedIndex = options.indexOf(value);
 
     td.innerHTML = '';
     const container = document.createElement('div');
@@ -123,34 +168,13 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
     container.appendChild(select);
     container.appendChild(input);
     td.appendChild(container);
-  }, [dropdownData, dropdownValues, dropdownColors]);
-
-  const colHeaders = useMemo(() => [
-    'Gün', 'Tarih', '1.Hat', '2.Hat', '3.Hat', '4.Hat', '1.Hat', '2.Hat', 'AYPE-T', 'YYPE', 'PP1', 'PP2', 'PTA', 'PA', 'MB'
-  ], []);
-
-  const nestedHeaders = useMemo(() => [
-    [{ label: 'Takvim', colspan: 2 }, { label: 'PVC Fabrikası', colspan: 4 }, { label: 'AYPE Fabrikası', colspan: 2 }, 'AYPE-T', 'YYPE', { label: 'PP', colspan: 2 }, 'PTA', 'PA', 'MB'],
-    ['Gün', 'Tarih', '1.Hat', '2.Hat', '3.Hat', '4.Hat', '1.Hat', '2.Hat', '', '', '1. Hat', '2. Hat', '', '', '']
-  ], []);
+  }, [colHeaders, dropdownData, dropdownValues, dropdownColors]);
 
   const columnSettings = useMemo(() => [
     { data: 0, readOnly: true, width: 100, editor: false },
     { data: 1, readOnly: true, width: 100, editor: false },
-    { data: 2, renderer: dropdownRenderer, width: 80, editor: false },
-    { data: 3, renderer: dropdownRenderer, width: 80, editor: false },
-    { data: 4, renderer: dropdownRenderer, width: 80, editor: false },
-    { data: 5, renderer: dropdownRenderer, width: 80, editor: false },
-    { data: 6, renderer: dropdownRenderer, width: 80, editor: false },
-    { data: 7, renderer: dropdownRenderer, width: 80, editor: false },
-    { data: 8, renderer: dropdownRenderer, width: 80, editor: false },
-    { data: 9, renderer: dropdownRenderer, width: 80, editor: false },
-    { data: 10, renderer: dropdownRenderer, width: 80, editor: false },
-    { data: 11, renderer: dropdownRenderer, width: 80, editor: false },
-    { data: 12, renderer: dropdownRenderer, width: 80, editor: false },
-    { data: 13, renderer: dropdownRenderer, width: 80, editor: false },
-    { data: 14, renderer: dropdownRenderer, width: 80, editor: false },
-  ], [dropdownRenderer]);
+    ...colHeaders.slice(2).map(() => ({ renderer: dropdownRenderer, width: 80, editor: false }))
+  ], [dropdownRenderer, colHeaders]);
 
   return (
     <div className="production-table">

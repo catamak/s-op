@@ -1,18 +1,18 @@
 import React from 'react';
 import './ComparisonTable.css';
 
-const ComparisonTable = ({ data }) => {
+const ComparisonTable = ({ title, data, rev1Label, rev2Label }) => {
   return (
     <table className="comparison-table">
       <thead>
         <tr>
-          <th colSpan="6" className="table-main-header">UYUM TAKİBİ</th>
+          <th colSpan="6" className="table-main-header">{title}</th>
         </tr>
         <tr>
           <th>FABRİKA</th>
           <th>ÜRÜN</th>
-          <th>REVİZE -1</th>
-          <th>REVİZE 1</th>
+          <th>{rev1Label}</th>
+          <th>{rev2Label}</th>
           <th>FARK</th>
           <th>UYUM</th>
         </tr>

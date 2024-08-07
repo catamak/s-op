@@ -1,37 +1,52 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Sağa kaydırmayı önlemek için */
+  height: 100%;
+}
+
 .reports-page {
+  
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+  width: 100%; /* Ekran genişliğini tam kullanmak için */
+  height: 100%; /* Tam ekran yüksekliği */
+
 }
 
 .tables-and-chart {
+  width: 90%; /* Genişliği %90 olarak ayarlayın */
+  margin: 40px; /* Ortalamak için */
   display: flex;
-  flex: 1;
-}
-
-.table-container {
-  flex: 1;
-  padding: 20px;
-  overflow: auto;
+  flex-direction: column; /* Tabloların ve grafiğin dikey hizalanması için */
+  box-sizing: border-box;
+   /* Taşmayı önlemek için */
 }
 
 .chart-and-summary-container {
-  flex: 1;
-  padding: 20px;
   display: flex;
   flex-direction: column;
-  overflow: auto;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  
 }
 
 .summary-table-container {
-  flex: 1;
+  width: 100%;
+  /* Üstüne boşluk eklemek için */
 }
 
 .summary-table {
   width: 100%;
   border-collapse: collapse;
+ margin-top: 40px;
+ margin-bottom: 40px;
 }
-
 .summary-table th,
 .summary-table td {
   border: 1px solid #ddd;
@@ -40,5 +55,18 @@
 }
 
 .summary-table th {
-  background-color: #f4f4f4;
+  background-color: #f2f2f2;
+}
+
+.chart-container {
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  margin-bottom: 20px; /* Altına boşluk eklemek için */
+}
+
+.line-chart {
+  max-width: 100%; /* Genişliği %100'ün altında tutun */
+  height: auto;
+  margin: 0 auto;
 }

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { FormControl, Select, MenuItem, Button, Box } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { FormControl, Select, MenuItem, Button, Box, Snackbar, Alert } from '@mui/material';
 import './Toolbar.css';
 
 const Toolbar = ({ 
@@ -9,13 +9,27 @@ const Toolbar = ({
   formStatus, handleSubmitForm, 
   handleSendForReview, 
   handlePublishRevision, 
-  handleNewRevision 
+  handleNewRevision,
+  isFormValid // Form geçerliliği kontrolü için prop ekledik
 }) => {
   const [showAdvancedButtons, setShowAdvancedButtons] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+
+  useEffect(() => {
+    if (!isFormValid) {
+      setShowAdvancedButtons(false);
+    }
+  }, [isFormValid]);
 
   const handleAdvanceForm = () => {
-    setShowAdvancedButtons(true);
-    handleSubmitForm(); // Trigger any necessary logic or form submission
+    if (isFormValid) {
+      setShowAdvancedButtons(true);
+      handleSubmitForm();
+    } else {
+      setSnackbarMessage('Lütfen tüm dropdown değerlerini seçiniz.');
+      setSnackbarOpen(true);
+    }
   };
 
   return (
@@ -72,10 +86,20 @@ const Toolbar = ({
               displayEmpty
               inputProps={{ 'aria-label': 'Revizyon' }}
               sx={{ fontSize: 16 }}
+              renderValue={(selected) => {
+                if (selected === "") {
+                  return "Revizyon";
+                }
+                return `Revizyon ${selected}`;
+              }}
             >
-              {[...Array(revision + 1).keys()].map(i => (
-                <MenuItem key={i} value={i}>Revizyon {i}</MenuItem>
-              ))}
+              {revision > 0 ? (
+                [...Array(revision + 1).keys()].map(i => (
+                  <MenuItem key={i} value={i}>Revizyon {i}</MenuItem>
+                ))
+              ) : (
+                <MenuItem disabled>Geçmiş Revizyon Bulunamadı</MenuItem>
+              )}
             </Select>
           </FormControl>
         </Box>
@@ -86,27 +110,29 @@ const Toolbar = ({
             <Button 
               variant="contained" 
               sx={{ 
-                backgroundColor: '#93BFB7', 
+                backgroundColor: isFormValid ? '#93BFB7' : '#CCCCCC', // Geçerli değilse gri
                 color: 'white',
                 '&:hover': {
-                  backgroundColor: '#608D90'
+                  backgroundColor: isFormValid ? '#608D90' : '#AAAAAA'
                 },
                 marginRight: 2 
               }}
               onClick={handleSubmitForm}
+              disabled={!isFormValid} // Geçerli değilse butonu devre dışı bırak
             >
               Taslak Kaydet
             </Button>
             <Button 
               variant="contained" 
               sx={{ 
-                backgroundColor: '#93BFB7', 
+                backgroundColor: isFormValid ? '#93BFB7' : '#CCCCCC', // Geçerli değilse gri
                 color: 'white',
                 '&:hover': {
-                  backgroundColor: '#608D90'
+                  backgroundColor: isFormValid ? '#608D90' : '#AAAAAA'
                 }
               }}
               onClick={handleAdvanceForm}
+              disabled={!isFormValid} // Geçerli değilse butonu devre dışı bırak
             >
               Formu İlerlet
             </Button>
@@ -157,11 +183,16 @@ const Toolbar = ({
           </>
         )}
         <div className="toolbar-info">
-          <span>Durum: {formStatus === 'draft' ? 'Taslak Form' : formStatus === 'submitted' ? 'Gönderildi' : formStatus === 'inReview' ? 'Görüş Bekleniyor' : 'Yayında'}</span>
+          <span>Durum: {formStatus === 'draft' ? 'Taslak Form' : formStatus === 'submitted' ? 'Gönderildi' : formStatus === 'inReview' ? 'Görüş Bekleniyor' : 'Revizyon Yayında'}</span>
           <span>Revizyon No: {revision}</span>
           <span>Revizyon Tarihi: {new Date().toLocaleDateString('tr-TR')}</span>
         </div>
       </div>
+      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={() => setSnackbarOpen(false)}>
+        <Alert onClose={() => setSnackbarOpen(false)} severity="warning" sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

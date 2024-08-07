@@ -1,29 +1,32 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
-import 'chart.js/auto';
-import './ComparisonChart.css';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 
-const ComparisonChart = ({ data }) => {
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+const ComparisonChart = ({ title, data }) => {
   const options = {
-    scales: {
-      x: {
-        type: 'category',
-        labels: data.labels,
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
       },
-      y: {
-        beginAtZero: true,
+      title: {
+        display: true,
+        text: title,
       },
     },
   };
 
-  return (
-    <div className="comparison-chart-container">
-      <Line data={data} options={options} />
-      <div className="legend">
-        {/* Add more legend items as needed */}
-      </div>
-    </div>
-  );
+  return <Line options={options} data={data} />;
 };
 
 export default ComparisonChart;

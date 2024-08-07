@@ -60,7 +60,6 @@ const ComparisonToolbar = ({ month, setMonth, revision1, setRevision1, revision2
       </Box>
       <Box sx={{ minWidth: 120, marginRight: 2, height: '40px' }} className="toolbar-item">
         <FormControl fullWidth>
-          <InputLabel id="revision1-label">Revizyon 1</InputLabel>
           <Select
             labelId="revision1-label"
             id="revision1-select"
@@ -87,12 +86,13 @@ const ComparisonToolbar = ({ month, setMonth, revision1, setRevision1, revision2
             <MenuItem value={-1}>Revizyon -1</MenuItem>
             <MenuItem value={0}>Revizyon 0</MenuItem>
             <MenuItem value={1}>Revizyon 1</MenuItem>
+            <MenuItem value={2}>Revizyon 2</MenuItem>
+            <MenuItem value={3}>Revizyon 3</MenuItem>
           </Select>
         </FormControl>
       </Box>
       <Box sx={{ minWidth: 120, height: '40px' }} className="toolbar-item">
         <FormControl fullWidth>
-          <InputLabel id="revision2-label">Revizyon 2</InputLabel>
           <Select
             labelId="revision2-label"
             id="revision2-select"
@@ -119,6 +119,8 @@ const ComparisonToolbar = ({ month, setMonth, revision1, setRevision1, revision2
             <MenuItem value={-1}>Revizyon -1</MenuItem>
             <MenuItem value={0}>Revizyon 0</MenuItem>
             <MenuItem value={1}>Revizyon 1</MenuItem>
+            <MenuItem value={2}>Revizyon 2</MenuItem>
+            <MenuItem value={3}>Revizyon 3</MenuItem>
           </Select>
         </FormControl>
       </Box>

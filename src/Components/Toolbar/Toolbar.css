@@ -10,3 +10,39 @@
 .toolbar .toolbar-item {
   margin-right: 10px; /* Bileşenler arasında boşluk bırakır */
 }
+
+/* Dropdown menü ve butonları hizalamak için flex ayarları */
+.toolbar .toolbar-select {
+  display: flex;
+  align-items: center;
+}
+
+.toolbar .MuiSelect-select {
+  font-size: 16px; /* Dropdown menü font boyutunu ayarlar */
+}
+
+.toolbar .MuiSelect {
+  min-width: 120px; /* Dropdown menü genişliğini ayarlar */
+}
+
+.toolbar .MuiMenuItem {
+  font-size: 16px; /* Menü öğeleri font boyutunu ayarlar */
+}
+
+.toolbar .MuiSelect-outlined {
+  border: 1px solid #ccc; /* Dropdown menü kenar çizgisi rengi */
+}
+
+/* "Geçmiş Revizyon Bulunamadı" mesajının dropdown ile aynı yükseklikte olmasını sağlar */
+.toolbar .no-revision-message {
+  font-size: 16px; /* Mesajın font boyutunu dropdown ile uyumlu hale getirir */
+  min-width: 120px; /* Mesajın genişliğini dropdown ile uyumlu hale getirir */
+  height: 40px; /* Mesajın yüksekliğini dropdown ile uyumlu hale getirir */
+  display: flex;
+  align-items: center; /* Mesajı dikeyde ortalar */
+  justify-content: center; /* Mesajı yatayda ortalar */
+  color: #888; /* Mesajın rengini gri yapar */
+  background-color: #f5f5f5; /* Mesajın arka plan rengini açık gri yapar */
+  border: 1px solid #ccc; /* Mesajın kenar çizgisi rengi */
+  border-radius: 4px; /* Kenarları yuvarlar */
+}

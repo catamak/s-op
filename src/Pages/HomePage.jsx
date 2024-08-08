@@ -7,7 +7,7 @@ import RevisionDialog from '../Components/RevisionDialog/RevisionDialog';
 import './HomePage.css';
 
 const HomePage = () => {
-  const [revision, setRevision] = useState(-1); // Revizyon numarasını saklar
+  const [revision, setRevision] = useState(-1);
   const [month, setMonth] = useState('');
   const [year, setYear] = useState('');
   const [formStatus, setFormStatus] = useState('draft');
@@ -20,10 +20,11 @@ const HomePage = () => {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [tableData, setTableData] = useState([]);
   const [showReviewAndPublishButtons, setShowReviewAndPublishButtons] = useState(false);
+  const [isTableComplete, setIsTableComplete] = useState(false); // Tablo tamamlanma durumu
 
   useEffect(() => {
     const currentDate = new Date();
-    setMonth(currentDate.getMonth() + 1); // Ayları 0-11 arası alır, bu yüzden +1 ekliyoruz
+    setMonth(currentDate.getMonth() + 1);
     setYear(currentDate.getFullYear());
   }, []);
 
@@ -40,11 +41,11 @@ const HomePage = () => {
   };
 
   const handleSubmitForm = () => {
-    if (tableData.every(row => row.slice(2, 15).every(cell => cell !== ''))) {
+    if (isTableComplete) {
       setFormStatus('submitted');
       setSnackbarMessage('Form başarıyla ilerletildi.');
       setSnackbarOpen(true);
-      setShowReviewAndPublishButtons(true); // İnceleme ve yayınlama butonlarını gösterir
+      setShowReviewAndPublishButtons(true);
     } else {
       setSnackbarMessage('Lütfen tüm dropdown değerlerini seçiniz.');
       setSnackbarOpen(true);
@@ -55,11 +56,11 @@ const HomePage = () => {
     setFormStatus('inReview');
     setSnackbarMessage('Form görüşe gönderildi.');
     setSnackbarOpen(true);
-    setOpen(true); // İnceleme diyalog penceresini açar
+    setOpen(true);
   };
 
   const handlePublishRevision = () => {
-    setRevision(prev => prev + 1); // Revizyon numarasını 1 artırır
+    setRevision(prev => prev + 1);
     setFormStatus('published');
     setSnackbarMessage('Revizyon yayınlandı.');
     setSnackbarOpen(true);
@@ -87,16 +88,17 @@ const HomePage = () => {
   };
 
   const handleNewRevision = () => {
-    setRevision(prev => prev + 1); // Yeni revizyon oluştururken mevcut revizyon numarasını 1 artırır
+    setRevision(prev => prev + 1);
     setFormStatus('draft');
     setTableData([]);
-    setShowReviewAndPublishButtons(false); // İnceleme ve yayınlama butonlarını gizler
+    setShowReviewAndPublishButtons(false);
     setSnackbarMessage('Yeni revizyon oluşturuldu.');
     setSnackbarOpen(true);
   };
 
-  const updateTableData = (data) => {
+  const updateTableData = (data, isComplete) => {
     setTableData(data);
+    setIsTableComplete(isComplete);
   };
 
   return (
@@ -114,9 +116,15 @@ const HomePage = () => {
         handleSendForReview={handleSendForReview}
         handlePublishRevision={handlePublishRevision}
         handleNewRevision={handleNewRevision}
+        isTableComplete={isTableComplete} // Tablo tamamlanma durumunu geçiyoruz
       />
       <div className="content">
-        <ProductionTable revision={revision} month={month} year={year} updateTableData={updateTableData} />
+        <ProductionTable
+          revision={revision}
+          month={month}
+          year={year}
+          updateTableData={updateTableData}
+        />
       </div>
       <RevisionDialog
         open={open}
@@ -137,12 +145,7 @@ const HomePage = () => {
           {snackbarMessage}
         </Alert>
       </Snackbar>
-      {showReviewAndPublishButtons && (
-        <div className="action-buttons">
-          <button onClick={handleSendForReview}>Görüşe Yolla</button>
-          <button onClick={handlePublishRevision}>Revizyonu Yayınla</button>
-        </div>
-      )}
+  
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FormControl, Select, MenuItem, Button, Box, Snackbar, Alert } from '@mui/material';
 import './Toolbar.css';
 
@@ -9,32 +9,28 @@ const Toolbar = ({
   formStatus, handleSubmitForm, 
   handleSendForReview, 
   handlePublishRevision, 
-  handleNewRevision,
-  isFormValid // Form geçerliliği kontrolü için prop ekledik
+  handleNewRevision, 
+  isTableComplete 
 }) => {
   const [showAdvancedButtons, setShowAdvancedButtons] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
 
-  useEffect(() => {
-    if (!isFormValid) {
-      setShowAdvancedButtons(false);
-    }
-  }, [isFormValid]);
-
+  // Formu ilerletme fonksiyonu
   const handleAdvanceForm = () => {
-    if (isFormValid) {
-      setShowAdvancedButtons(true);
-      handleSubmitForm();
-    } else {
-      setSnackbarMessage('Lütfen tüm dropdown değerlerini seçiniz.');
+    if (!isTableComplete) {
+      setSnackbarMessage('Lütfen tabloyu tamamlayın.');
       setSnackbarOpen(true);
+      return;
     }
+    setShowAdvancedButtons(true); // İleri seviye butonları göster
+    handleSubmitForm();
   };
 
   return (
     <div className="toolbar">
       <div className="toolbar-left">
+        {/* Ay seçimi */}
         <Box sx={{ minWidth: 120, marginRight: 2 }}>
           <FormControl fullWidth>
             <Select
@@ -60,6 +56,8 @@ const Toolbar = ({
             </Select>
           </FormControl>
         </Box>
+
+        {/* Yıl seçimi */}
         <Box sx={{ minWidth: 120, marginRight: 2 }}>
           <FormControl fullWidth>
             <Select
@@ -77,6 +75,8 @@ const Toolbar = ({
             </Select>
           </FormControl>
         </Box>
+
+        {/* Revizyon seçimi */}
         <Box sx={{ minWidth: 120, marginRight: 2 }}>
           <FormControl fullWidth>
             <Select
@@ -104,41 +104,45 @@ const Toolbar = ({
           </FormControl>
         </Box>
       </div>
+
       <div className="toolbar-right">
-        {!showAdvancedButtons ? (
+        {/* Taslak Kaydet ve Formu İlerlet butonları */}
+        {!showAdvancedButtons && (
+          <Button 
+            variant="contained" 
+            sx={{ 
+              backgroundColor: '#93BFB7', 
+              color: 'white',
+              '&:hover': {
+                backgroundColor: '#608D90'
+              },
+              marginRight: 2 
+            }}
+            onClick={handleSubmitForm}
+          >
+            Taslak Kaydet
+          </Button>
+        )}
+        {!showAdvancedButtons && (
+          <Button 
+            variant="contained" 
+            sx={{ 
+              backgroundColor: '#93BFB7', 
+              color: 'white',
+              '&:hover': {
+                backgroundColor: '#608D90'
+              }
+            }}
+            onClick={handleAdvanceForm}
+            disabled={!isTableComplete}
+          >
+            Formu İlerlet
+          </Button>
+        )}
+
+        {showAdvancedButtons && (
           <>
-            <Button 
-              variant="contained" 
-              sx={{ 
-                backgroundColor: isFormValid ? '#93BFB7' : '#CCCCCC', // Geçerli değilse gri
-                color: 'white',
-                '&:hover': {
-                  backgroundColor: isFormValid ? '#608D90' : '#AAAAAA'
-                },
-                marginRight: 2 
-              }}
-              onClick={handleSubmitForm}
-              disabled={!isFormValid} // Geçerli değilse butonu devre dışı bırak
-            >
-              Taslak Kaydet
-            </Button>
-            <Button 
-              variant="contained" 
-              sx={{ 
-                backgroundColor: isFormValid ? '#93BFB7' : '#CCCCCC', // Geçerli değilse gri
-                color: 'white',
-                '&:hover': {
-                  backgroundColor: isFormValid ? '#608D90' : '#AAAAAA'
-                }
-              }}
-              onClick={handleAdvanceForm}
-              disabled={!isFormValid} // Geçerli değilse butonu devre dışı bırak
-            >
-              Formu İlerlet
-            </Button>
-          </>
-        ) : (
-          <>
+            {/* İleri seviye butonlar */}
             <Button 
               variant="contained" 
               sx={{ 
@@ -164,6 +168,7 @@ const Toolbar = ({
                 marginRight: 2 
               }}
               onClick={handleSendForReview}
+              disabled={!isTableComplete}
             >
               Görüşe Yolla
             </Button>
@@ -177,17 +182,22 @@ const Toolbar = ({
                 }
               }}
               onClick={handlePublishRevision}
+              disabled={!isTableComplete}
             >
               Revizyonu Yayınla
             </Button>
           </>
         )}
+
+        {/* Durum bilgisi */}
         <div className="toolbar-info">
           <span>Durum: {formStatus === 'draft' ? 'Taslak Form' : formStatus === 'submitted' ? 'Gönderildi' : formStatus === 'inReview' ? 'Görüş Bekleniyor' : 'Revizyon Yayında'}</span>
           <span>Revizyon No: {revision}</span>
           <span>Revizyon Tarihi: {new Date().toLocaleDateString('tr-TR')}</span>
         </div>
       </div>
+
+      {/* Snackbar Uyarı Mesajı */}
       <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={() => setSnackbarOpen(false)}>
         <Alert onClose={() => setSnackbarOpen(false)} severity="warning" sx={{ width: '100%' }}>
           {snackbarMessage}

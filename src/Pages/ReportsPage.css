@@ -10,7 +10,7 @@ body, html {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  padding: 0px;
   box-sizing: border-box;
   width: 100%; /* Ekran genişliğini tam kullanmak için */
   height: 100%; /* Tam ekran yüksekliği */

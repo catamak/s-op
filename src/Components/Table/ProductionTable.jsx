@@ -11,16 +11,13 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
   const [factoriesData, setFactoriesData] = useState([]);
   const [dropdownData, setDropdownData] = useState({});
   const [dropdownValues, setDropdownValues] = useState({});
-  const [dropdownColors, setDropdownColors] = useState({});
 
   useEffect(() => {
     fetch('https://localhost:7032/api/Factories')
       .then(response => response.json())
       .then(data => {
-        console.log('Factories Data:', data); // Konsola veriyi yazdırma
         setFactoriesData(data);
 
-        // Dinamik olarak tablo başlıklarını oluşturuyoruz
         const factoryHeaders = [];
         const nestedFactoryHeaders = [{ label: 'Takvim', colspan: 2 }];
 
@@ -40,45 +37,28 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
             const dayName = currentDate.toLocaleDateString('tr-TR', { weekday: 'long' });
             const formattedDate = currentDate.toLocaleDateString('tr-TR');
 
-            // Gün ve Tarih bilgisiyle birlikte tablo verilerini oluşturuyoruz
             return [dayName, formattedDate];
           });
 
           setData(newData);
         }
 
-        // Dropdown verilerini hazırlıyoruz
         const dropdownDataMap = {};
+        const dropdownValueMap = {};
+
         data.forEach(factory => {
           factory.productLines.forEach(line => {
             dropdownDataMap[line.line_Name] = line.factoryProducts.map(product => product.product_Name);
+            line.factoryProducts.forEach(product => {
+              dropdownValueMap[product.product_Name] = product.value;
+            });
           });
         });
         setDropdownData(dropdownDataMap);
+        setDropdownValues(dropdownValueMap);
       })
       .catch(error => console.error('API çağrısında hata oluştu:', error));
   }, [month, year]);
-
-  useEffect(() => {
-    fetch('https://localhost:7032/api/Values')
-      .then(response => response.json())
-      .then(data => {
-        console.log('Dropdown Data:', data); // Konsola veriyi yazdırma
-        const dropdownMap = {};
-        data.forEach(item => {
-          dropdownMap[item.Value] = item.SomeNumericValue;  // Veritabanındaki uygun alanı kullanın
-        });
-
-        const dropdownColorMap = {};
-        data.forEach(item => {
-          dropdownColorMap[item.Value] = item.SomeColorValue;  // Veritabanındaki uygun alanı kullanın
-        });
-
-        setDropdownValues(dropdownMap);
-        setDropdownColors(dropdownColorMap);
-      })
-      .catch(error => console.error('API çağrısında hata oluştu:', error));
-  }, []);
 
   useEffect(() => {
     updateTableData(data);
@@ -101,20 +81,25 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
 
     select.style.width = '100%';
     select.style.height = '50%';
-    select.value = value || '';
     select.style.fontSize = '10px';
     select.style.fontWeight = 'bold';
 
     const lineName = colHeaders[col];
     const options = dropdownData[lineName] || [];
 
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.text = '';
+    select.appendChild(defaultOption);
+
     options.forEach(option => {
       const optionElement = document.createElement('option');
       optionElement.value = option;
       optionElement.text = option;
-      optionElement.style.backgroundColor = dropdownColors[option] || 'white';
       select.appendChild(optionElement);
     });
+
+    select.value = value || '';
 
     select.onchange = function () {
       const selectedValue = this.value;
@@ -131,12 +116,9 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
           const select = cell.querySelector('select');
           if (select) {
             select.value = selectedValue;
-            select.style.backgroundColor = dropdownColors[selectedValue] || 'white';
           }
         }
       });
-      select.style.backgroundColor = dropdownColors[selectedValue] || 'white';
-      select.selectedIndex = options.indexOf(selectedValue);
     };
 
     input.onchange = function () {
@@ -155,20 +137,13 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
       }
     };
 
-    if (dropdownColors[value]) {
-      select.style.backgroundColor = dropdownColors[value];
-    } else {
-      select.style.backgroundColor = 'white';
-    }
-    select.selectedIndex = options.indexOf(value);
-
     td.innerHTML = '';
     const container = document.createElement('div');
     container.className = 'dropdown-container';
     container.appendChild(select);
     container.appendChild(input);
     td.appendChild(container);
-  }, [colHeaders, dropdownData, dropdownValues, dropdownColors]);
+  }, [colHeaders, dropdownData, dropdownValues]);
 
   const columnSettings = useMemo(() => [
     { data: 0, readOnly: true, width: 100, editor: false },

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '../Components/Navbar/Navbar';
 import Toolbar from '../Components/Toolbar/Toolbar';
 import { Snackbar, Alert } from '@mui/material';
@@ -28,19 +28,19 @@ const HomePage = () => {
     setYear(currentDate.getFullYear());
   }, []);
 
-  const handleRevisionChange = useCallback((event) => {
+  const handleRevisionChange = (event) => {
     setRevision(event.target.value);
-  }, []);
+  };
 
-  const handleMonthChange = useCallback((event) => {
+  const handleMonthChange = (event) => {
     setMonth(event.target.value);
-  }, []);
+  };
 
-  const handleYearChange = useCallback((event) => {
+  const handleYearChange = (event) => {
     setYear(event.target.value);
-  }, []);
+  };
 
-  const handleSubmitForm = useCallback(() => {
+  const handleSubmitForm = () => {
     if (isTableComplete) {
       setFormStatus('submitted');
       setSnackbarMessage('Form başarıyla ilerletildi.');
@@ -50,67 +50,67 @@ const HomePage = () => {
       setSnackbarMessage('Lütfen tüm dropdown değerlerini seçiniz.');
       setSnackbarOpen(true);
     }
-  }, [isTableComplete]);
+  };
 
-  const handleSendForReview = useCallback(() => {
+  const handleSendForReview = () => {
     setFormStatus('inReview');
     setSnackbarMessage('Form görüşe gönderildi.');
     setSnackbarOpen(true);
     setOpen(true);
-  }, []);
+  };
 
-  const handlePublishRevision = useCallback(() => {
+  const handlePublishRevision = () => {
     setRevision(prev => prev + 1);
     setFormStatus('published');
     setSnackbarMessage('Revizyon yayınlandı.');
     setSnackbarOpen(true);
-  }, []);
+  };
 
-  const handleClose = useCallback(() => {
+  const handleClose = () => {
     setOpen(false);
-  }, []);
+  };
 
-  const handleFactoryChange = useCallback((event) => {
+  const handleFactoryChange = (event) => {
     setSelectedFactory(event.target.value);
-  }, []);
+  };
 
-  const handleCategoryChange = useCallback((event) => {
+  const handleCategoryChange = (event) => {
     const {
       target: { value }
     } = event;
     setSelectedCategories(
       typeof value === 'string' ? value.split(',') : value
     );
-  }, []);
+  };
 
-  const handleCategoryDelete = useCallback((category) => {
+  const handleCategoryDelete = (category) => {
     setSelectedCategories(selectedCategories.filter(c => c !== category));
-  }, [selectedCategories]);
+  };
 
-  const handleNewRevision = useCallback(() => {
+  const handleNewRevision = () => {
     setRevision(prev => prev + 1);
     setFormStatus('draft');
     setTableData([]);
     setShowReviewAndPublishButtons(false);
     setSnackbarMessage('Yeni revizyon oluşturuldu.');
     setSnackbarOpen(true);
-  }, []);
+  };
 
-  const updateTableData = useCallback((data, isComplete) => {
+  const updateTableData = (data, isComplete) => {
     setTableData(data);
     setIsTableComplete(isComplete);
-  }, []);
+  };
 
   return (
     <div className="home-page">
       <Navbar formStatus={formStatus} handleNewRevision={handleNewRevision} />
       <Toolbar
         month={month}
-        setMonth={handleMonthChange}
+        setMonth={setMonth}
         year={year}
-        setYear={handleYearChange}
+        setYear={setYear}
         revision={revision}
-        setRevision={handleRevisionChange}
+        setRevision={setRevision}
         formStatus={formStatus}
         handleSubmitForm={handleSubmitForm}
         handleSendForReview={handleSendForReview}
@@ -145,6 +145,7 @@ const HomePage = () => {
           {snackbarMessage}
         </Alert>
       </Snackbar>
+  
     </div>
   );
 };

@@ -3,6 +3,7 @@ import { HotTable } from '@handsontable/react';
 import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.css';
 import './ProductionTable.css';
+import Spinner from '../spinner';
 
 const ProductionTable = React.memo(({ revision, month, year, updateTableData }) => {
   const [data, setData] = useState([]);
@@ -13,9 +14,13 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
   const [dropdownValues, setDropdownValues] = useState({});
   const [formProgressed, setFormProgressed] = useState(false);
   const hotTableRef = useRef(null);
+  const [loading, setLoading] = useState("");
+ 
 
   useEffect(() => {
     const fetchData = async () => {
+    
+setLoading(true);
       try {
         const response = await fetch('https://localhost:7032/api/Factories');
         const data = await response.json();
@@ -65,6 +70,12 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
       } catch (error) {
         console.error('API çağrısında hata oluştu:', error);
       }
+      finally {
+        setTimeout(() => {
+          setLoading(false);
+        }, 600);
+      }
+
     };
 
     fetchData();
@@ -214,32 +225,39 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
 
   return (
     <div className="production-table">
-      <HotTable
-        data={data}
-        colHeaders={colHeaders}
-        nestedHeaders={nestedHeaders}
-        editor={false}
-        rowHeaders={false}
-        width="100%"
-        height="auto"
-        licenseKey="non-commercial-and-evaluation"
-        columns={columnSettings}
-        stretchH="all"
-        className="handsontable"
-        ref={hotTableRef}
-      />
-      <div className="buttons-container">
-        {formProgressed && (
-          <button onClick={handleFormProgress} className="form-progress-button">
-            Formu İlerlet
-          </button>
-        )}
-        {/* <button className="draft-save-button">Taslak Kaydet</button>
-        <button className="send-for-review-button">Görüşe Yolla</button>
-        <button className="publish-revision-button">Revizyonu Yayınla</button> */}
-      </div>
+      {loading ? (
+        <Spinner /> // Spinner componenti burada gösterilecek
+      ) : (
+        <>
+          <HotTable
+            data={data}
+            colHeaders={colHeaders}
+            nestedHeaders={nestedHeaders}
+            editor={false}
+            rowHeaders={false}
+            width="100%"
+            height="auto"
+            licenseKey="non-commercial-and-evaluation"
+            columns={columnSettings}
+            stretchH="all"
+            className="handsontable"
+            ref={hotTableRef}
+          />
+          <div className="buttons-container">
+            {formProgressed && (
+              <button onClick={handleFormProgress} className="form-progress-button">
+                Formu İlerlet
+              </button>
+            )}
+            {/* <button className="draft-save-button">Taslak Kaydet</button>
+            <button className="send-for-review-button">Görüşe Yolla</button>
+            <button className="publish-revision-button">Revizyonu Yayınla</button> */}
+          </div>
+        </>
+      )}
     </div>
   );
+  
 });
 
 export default ProductionTable;

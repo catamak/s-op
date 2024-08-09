@@ -102,28 +102,25 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
     const select = document.createElement('select');
     const input = document.createElement('input');
 
-    input.type = 'text';
-    input.value = dropdownValues[`${colHeaders[col]}-${value}`] || '';
-    input.style.width = '100%';
-    input.style.border = 'none';
-    input.style.height = '50%';
-    input.style.backgroundColor = 'white';
-    input.style.fontSize = '10px';
-    input.style.fontWeight = 'bold';
-
-    select.style.width = '100%';
-    select.style.height = '50%';
-    select.style.fontSize = '10px';
-    select.style.fontWeight = 'bold';
-
     const factoryHeaders = colHeaders.slice(2); // colHeaders'dan factoryHeaders'ı çıkar
 
-    const factoryIndex = Math.floor((col - 2) / (factoryHeaders.length / factoriesData.length));
+    let accumulatedColCount = 2;
+    let factoryIndex;
+    let lineIndex;
+
+    for (let i = 0; i < factoriesData.length; i++) {
+      const factory = factoriesData[i];
+      if (col >= accumulatedColCount && col < accumulatedColCount + factory.productLines.length) {
+        factoryIndex = i;
+        lineIndex = col - accumulatedColCount;
+        break;
+      }
+      accumulatedColCount += factory.productLines.length;
+    }
+
+    if (factoryIndex === undefined || lineIndex === undefined) return;
+
     const factory = factoriesData[factoryIndex];
-
-    if (!factory) return;
-
-    const lineIndex = (col - 2) % factory.productLines.length;
     const line = factory.productLines[lineIndex];
 
     if (!line) return;
@@ -145,6 +142,20 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
 
     select.value = value || '';
 
+    input.type = 'text';
+    input.value = dropdownValues[`${uniqueLineKey}-${select.value}`] || ''; // Seçilen ürünün value'sini input'a ata
+    input.style.width = '100%';
+    input.style.border = 'none';
+    input.style.height = '50%';
+    input.style.backgroundColor = 'white';
+    input.style.fontSize = '10px';
+    input.style.fontWeight = 'bold';
+
+    select.style.width = '100%';
+    select.style.height = '50%';
+    select.style.fontSize = '10px';
+    select.style.fontWeight = 'bold';
+
     select.onchange = () => {
       const selectedValue = select.value;
       const newValue = dropdownValues[`${uniqueLineKey}-${selectedValue}`] || '';
@@ -155,7 +166,7 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
           const cell = instance.getCell(r, col);
           const inputElement = cell.querySelector('input');
           if (inputElement) {
-            inputElement.value = newValue;
+            inputElement.value = newValue; // Seçilen ürünün value'sini input'a ata
           }
           const selectElement = cell.querySelector('select');
           if (selectElement) {
@@ -163,6 +174,7 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
           }
         }
       });
+      input.value = newValue; // Seçilen ürünün value'sini input'a ata
       const isComplete = checkIfTableIsComplete();
       updateTableData(data, isComplete);
     };

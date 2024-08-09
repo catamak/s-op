@@ -23,15 +23,36 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
 
         const factoryHeaders = [];
         const nestedFactoryHeaders = [{ label: 'Takvim', colspan: 2 }];
+        const dropdownDataMap = {};
+        const dropdownValueMap = {};
 
         data.forEach(factory => {
-          const lineNames = factory.productLines.map(line => line.line_Name);
+          const lineNames = [];
+
+          factory.productLines.forEach(line => {
+            const uniqueLineKey = `${factory.factory_id}-${line.product_Line_id}`;
+            lineNames.push(line.line_Name);
+
+            // Her hattın ürünlerini doğru şekilde eşle
+            const productsForLine = line.factoryProducts.map(product => ({
+              name: product.product_Name,
+              value: product.value
+            }));
+
+            dropdownDataMap[uniqueLineKey] = productsForLine.map(product => product.name);
+            productsForLine.forEach(product => {
+              dropdownValueMap[`${uniqueLineKey}-${product.name}`] = product.value;
+            });
+          });
+
           factoryHeaders.push(...lineNames);
           nestedFactoryHeaders.push({ label: factory.factory_Name, colspan: lineNames.length });
         });
 
         setColHeaders(['Gün', 'Tarih', ...factoryHeaders]);
         setNestedHeaders([nestedFactoryHeaders, ['Gün', 'Tarih', ...factoryHeaders]]);
+        setDropdownData(dropdownDataMap);
+        setDropdownValues(dropdownValueMap);
 
         if (month && year) {
           const daysInMonth = new Date(year, month, 0).getDate();
@@ -43,21 +64,6 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
           });
           setData(newData);
         }
-
-        const dropdownDataMap = {};
-        const dropdownValueMap = {};
-
-        data.forEach(factory => {
-          factory.productLines.forEach(line => {
-            dropdownDataMap[line.line_Name] = line.factoryProducts.map(product => product.product_Name);
-            line.factoryProducts.forEach(product => {
-              dropdownValueMap[product.product_Name] = product.value;
-            });
-          });
-        });
-
-        setDropdownData(dropdownDataMap);
-        setDropdownValues(dropdownValueMap);
       } catch (error) {
         console.error('API çağrısında hata oluştu:', error);
       }
@@ -97,7 +103,7 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
     const input = document.createElement('input');
 
     input.type = 'text';
-    input.value = dropdownValues[value] || '';
+    input.value = dropdownValues[`${colHeaders[col]}-${value}`] || '';
     input.style.width = '100%';
     input.style.border = 'none';
     input.style.height = '50%';
@@ -110,8 +116,20 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
     select.style.fontSize = '10px';
     select.style.fontWeight = 'bold';
 
-    const lineName = colHeaders[col];
-    const options = dropdownData[lineName] || [];
+    const factoryHeaders = colHeaders.slice(2); // colHeaders'dan factoryHeaders'ı çıkar
+
+    const factoryIndex = Math.floor((col - 2) / (factoryHeaders.length / factoriesData.length));
+    const factory = factoriesData[factoryIndex];
+
+    if (!factory) return;
+
+    const lineIndex = (col - 2) % factory.productLines.length;
+    const line = factory.productLines[lineIndex];
+
+    if (!line) return;
+
+    const uniqueLineKey = `${factory.factory_id}-${line.product_Line_id}`;
+    const options = dropdownData[uniqueLineKey] || [];
 
     const defaultOption = document.createElement('option');
     defaultOption.value = '';
@@ -129,7 +147,7 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
 
     select.onchange = () => {
       const selectedValue = select.value;
-      const newValue = dropdownValues[selectedValue] || '';
+      const newValue = dropdownValues[`${uniqueLineKey}-${selectedValue}`] || '';
       instance.batch(() => {
         const rowCount = instance.countRows();
         for (let r = row; r < rowCount; r++) {
@@ -173,7 +191,7 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
     container.appendChild(select);
     container.appendChild(input);
     td.appendChild(container);
-  }, [colHeaders, dropdownData, dropdownValues]);
+  }, [colHeaders, dropdownData, dropdownValues, factoriesData]);
 
   const columnSettings = useMemo(() => [
     { data: 0, readOnly: true, width: 100, editor: false },
@@ -208,7 +226,7 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
           </button>
         )}
         {/* <button className="draft-save-button">Taslak Kaydet</button>
-        <button className="send-for-review-button">Görüşe Yolla</button>
+        <button class="send-for-review-button">Görüşe Yolla</button>
         <button className="publish-revision-button">Revizyonu Yayınla</button> */}
       </div>
     </div>

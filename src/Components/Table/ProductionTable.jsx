@@ -28,12 +28,10 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
 
         data.forEach(factory => {
           const lineNames = [];
-
           factory.productLines.forEach(line => {
             const uniqueLineKey = `${factory.factory_id}-${line.product_Line_id}`;
             lineNames.push(line.line_Name);
 
-            // Her hattın ürünlerini doğru şekilde eşle
             const productsForLine = line.factoryProducts.map(product => ({
               name: product.product_Name,
               value: product.value
@@ -82,7 +80,6 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
       const hotInstance = hotTableRef.current.hotInstance;
       const rows = hotInstance.countRows();
       const cols = hotInstance.countCols();
-
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
           const cellValue = hotInstance.getDataAtCell(row, col);
@@ -102,7 +99,7 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
     const select = document.createElement('select');
     const input = document.createElement('input');
 
-    const factoryHeaders = colHeaders.slice(2); // colHeaders'dan factoryHeaders'ı çıkar
+    const factoryHeaders = colHeaders.slice(2);
 
     let accumulatedColCount = 2;
     let factoryIndex;
@@ -143,7 +140,7 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
     select.value = value || '';
 
     input.type = 'text';
-    input.value = dropdownValues[`${uniqueLineKey}-${select.value}`] || ''; // Seçilen ürünün value'sini input'a ata
+    input.value = dropdownValues[`${uniqueLineKey}-${select.value}`] || '';
     input.style.width = '100%';
     input.style.border = 'none';
     input.style.height = '50%';
@@ -166,7 +163,7 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
           const cell = instance.getCell(r, col);
           const inputElement = cell.querySelector('input');
           if (inputElement) {
-            inputElement.value = newValue; // Seçilen ürünün value'sini input'a ata
+            inputElement.value = newValue;
           }
           const selectElement = cell.querySelector('select');
           if (selectElement) {
@@ -174,7 +171,7 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
           }
         }
       });
-      input.value = newValue; // Seçilen ürünün value'sini input'a ata
+      input.value = newValue;
       const isComplete = checkIfTableIsComplete();
       updateTableData(data, isComplete);
     };
@@ -238,7 +235,7 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
           </button>
         )}
         {/* <button className="draft-save-button">Taslak Kaydet</button>
-        <button class="send-for-review-button">Görüşe Yolla</button>
+        <button className="send-for-review-button">Görüşe Yolla</button>
         <button className="publish-revision-button">Revizyonu Yayınla</button> */}
       </div>
     </div>

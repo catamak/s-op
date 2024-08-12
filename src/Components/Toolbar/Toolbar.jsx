@@ -1,3 +1,4 @@
+// Toolbar.js
 import React, { useState } from 'react';
 import { FormControl, Select, MenuItem, Button, Box, Snackbar, Alert } from '@mui/material';
 import './Toolbar.css';
@@ -16,21 +17,19 @@ const Toolbar = ({
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
 
-  // Formu ilerletme fonksiyonu
   const handleAdvanceForm = () => {
     if (!isTableComplete) {
       setSnackbarMessage('Lütfen tabloyu tamamlayın.');
       setSnackbarOpen(true);
       return;
     }
-    setShowAdvancedButtons(true); // İleri seviye butonları göster
+    setShowAdvancedButtons(true);
     handleSubmitForm();
   };
 
   return (
     <div className="toolbar">
       <div className="toolbar-left">
-        {/* Ay seçimi */}
         <Box sx={{ minWidth: 120, marginRight: 2 }}>
           <FormControl fullWidth>
             <Select
@@ -39,25 +38,17 @@ const Toolbar = ({
               onChange={(e) => setMonth(e.target.value)}
               displayEmpty
               inputProps={{ 'aria-label': 'Ay' }}
-              sx={{ fontSize: 16 }}
+              sx={{ fontSize: 16, backgroundColor: '#f5f5f5' }}
             >
-              <MenuItem value={1}>Ocak</MenuItem>
-              <MenuItem value={2}>Şubat</MenuItem>
-              <MenuItem value={3}>Mart</MenuItem>
-              <MenuItem value={4}>Nisan</MenuItem>
-              <MenuItem value={5}>Mayıs</MenuItem>
-              <MenuItem value={6}>Haziran</MenuItem>
-              <MenuItem value={7}>Temmuz</MenuItem>
-              <MenuItem value={8}>Ağustos</MenuItem>
-              <MenuItem value={9}>Eylül</MenuItem>
-              <MenuItem value={10}>Ekim</MenuItem>
-              <MenuItem value={11}>Kasım</MenuItem>
-              <MenuItem value={12}>Aralık</MenuItem>
+              {[...Array(12).keys()].map(i => (
+                <MenuItem key={i+1} value={i+1}>
+                  {new Date(0, i).toLocaleString('tr-TR', { month: 'long' })}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Box>
 
-        {/* Yıl seçimi */}
         <Box sx={{ minWidth: 120, marginRight: 2 }}>
           <FormControl fullWidth>
             <Select
@@ -66,17 +57,15 @@ const Toolbar = ({
               onChange={(e) => setYear(e.target.value)}
               displayEmpty
               inputProps={{ 'aria-label': 'Yıl' }}
-              sx={{ fontSize: 16 }}
+              sx={{ fontSize: 16, backgroundColor: '#f5f5f5' }}
             >
-              <MenuItem value={2022}>2022</MenuItem>
-              <MenuItem value={2023}>2023</MenuItem>
-              <MenuItem value={2024}>2024</MenuItem>
-              <MenuItem value={2025}>2025</MenuItem>
+              {[2022, 2023, 2024, 2025].map(y => (
+                <MenuItem key={y} value={y}>{y}</MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Box>
 
-        {/* Revizyon seçimi */}
         <Box sx={{ minWidth: 120, marginRight: 2 }}>
           <FormControl fullWidth>
             <Select
@@ -85,13 +74,8 @@ const Toolbar = ({
               onChange={(e) => setRevision(e.target.value)}
               displayEmpty
               inputProps={{ 'aria-label': 'Revizyon' }}
-              sx={{ fontSize: 16 }}
-              renderValue={(selected) => {
-                if (selected === "") {
-                  return "Revizyon";
-                }
-                return `Revizyon ${selected}`;
-              }}
+              sx={{ fontSize: 16, backgroundColor: '#f5f5f5' }}
+              renderValue={(selected) => selected === "" ? "Revizyon" : `Revizyon ${selected}`}
             >
               {revision > 0 ? (
                 [...Array(revision + 1).keys()].map(i => (
@@ -106,51 +90,14 @@ const Toolbar = ({
       </div>
 
       <div className="toolbar-right">
-        {/* Taslak Kaydet ve Formu İlerlet butonları */}
-        {!showAdvancedButtons && (
-          <Button 
-            variant="contained" 
-            sx={{ 
-              backgroundColor: '#93BFB7', 
-              color: 'white',
-              '&:hover': {
-                backgroundColor: '#608D90'
-              },
-              marginRight: 2 
-            }}
-            onClick={handleSubmitForm}
-          >
-            Taslak Kaydet
-          </Button>
-        )}
-        {!showAdvancedButtons && (
-          <Button 
-            variant="contained" 
-            sx={{ 
-              backgroundColor: '#93BFB7', 
-              color: 'white',
-              '&:hover': {
-                backgroundColor: '#608D90'
-              }
-            }}
-            onClick={handleAdvanceForm}
-            disabled={!isTableComplete}
-          >
-            Formu İlerlet
-          </Button>
-        )}
-
-        {showAdvancedButtons && (
+        {!showAdvancedButtons ? (
           <>
-            {/* İleri seviye butonlar */}
             <Button 
               variant="contained" 
               sx={{ 
                 backgroundColor: '#93BFB7', 
                 color: 'white',
-                '&:hover': {
-                  backgroundColor: '#608D90'
-                },
+                '&:hover': { backgroundColor: '#608D90' },
                 marginRight: 2 
               }}
               onClick={handleSubmitForm}
@@ -162,9 +109,34 @@ const Toolbar = ({
               sx={{ 
                 backgroundColor: '#93BFB7', 
                 color: 'white',
-                '&:hover': {
-                  backgroundColor: '#608D90'
-                },
+                '&:hover': { backgroundColor: '#608D90' }
+              }}
+              onClick={handleAdvanceForm}
+              disabled={!isTableComplete}
+            >
+              Formu İlerlet
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button 
+              variant="contained" 
+              sx={{ 
+                backgroundColor: '#93BFB7', 
+                color: 'white',
+                '&:hover': { backgroundColor: '#608D90' },
+                marginRight: 2 
+              }}
+              onClick={handleSubmitForm}
+            >
+              Taslak Kaydet
+            </Button>
+            <Button 
+              variant="contained" 
+              sx={{ 
+                backgroundColor: '#93BFB7', 
+                color: 'white',
+                '&:hover': { backgroundColor: '#608D90' },
                 marginRight: 2 
               }}
               onClick={handleSendForReview}
@@ -177,9 +149,7 @@ const Toolbar = ({
               sx={{ 
                 backgroundColor: '#93BFB7', 
                 color: 'white',
-                '&:hover': {
-                  backgroundColor: '#608D90'
-                }
+                '&:hover': { backgroundColor: '#608D90' }
               }}
               onClick={handlePublishRevision}
               disabled={!isTableComplete}
@@ -189,17 +159,17 @@ const Toolbar = ({
           </>
         )}
 
-        {/* Durum bilgisi */}
         <div className="toolbar-info">
-          <span>Durum: {formStatus === 'draft' ? 'Taslak Form' : formStatus === 'submitted' ? 'Gönderildi' : formStatus === 'inReview' ? 'Görüş Bekleniyor' : 'Revizyon Yayında'}</span>
+          <span>
+            Durum: {formStatus === 'draft' ? 'Taslak Form' : formStatus === 'submitted' ? 'Gönderildi' : formStatus === 'inReview' ? 'Görüş Bekleniyor' : 'Revizyon Yayında'}
+          </span>
           <span>Revizyon No: {revision}</span>
           <span>Revizyon Tarihi: {new Date().toLocaleDateString('tr-TR')}</span>
         </div>
       </div>
 
-      {/* Snackbar Uyarı Mesajı */}
       <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={() => setSnackbarOpen(false)}>
-        <Alert onClose={() => setSnackbarOpen(false)} severity="warning" sx={{ width: '100%' }}>
+        <Alert onClose={() => setSnackbarOpen(false)} severity="info" sx={{ width: '100%' }}>
           {snackbarMessage}
         </Alert>
       </Snackbar>

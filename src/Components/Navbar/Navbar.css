@@ -5,7 +5,6 @@
   align-items: center;
   padding: 10px 20px;
   background-color: #8785A2;
-  color: white;
   width: 100%;
   box-sizing: border-box;
 }
@@ -38,21 +37,12 @@
 /* Genel buton stili */
 .navbar-button {
   margin-right: 10px; /* Butonlar arasında boşluk */
-  color: white;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  font-family: "Poppins", sans-serif;
-  font-weight: 700; /* Kalın yazı */
-  font-size: 16px; /* Yazı boyutu */
-  background: none; /* Arka plan rengi */
-  border: none; /* Kenar rengi */
-  cursor: pointer; /* İmleç işareti */
+
 }
 
 /* FontAwesome ikonları */
 .svg-inline--fa {
+  padding-left: 10px;
   margin-right: 10px;
   margin-bottom: 5px;
   height: 1.2rem;

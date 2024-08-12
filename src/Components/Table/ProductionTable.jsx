@@ -4,6 +4,9 @@ import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.css';
 import './ProductionTable.css';
 import Spinner from '../spinner';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+
 
 const ProductionTable = React.memo(({ revision, month, year, updateTableData }) => {
   const [data, setData] = useState([]);
@@ -14,6 +17,9 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
   const [dropdownValues, setDropdownValues] = useState({});
   const [formProgressed, setFormProgressed] = useState(false);
   const hotTableRef = useRef(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+const [snackbarMessage, setSnackbarMessage] = useState('');
+
   const [loading, setLoading] = useState("");
  
 
@@ -219,9 +225,48 @@ setLoading(true);
     ...colHeaders.slice(2).map(() => ({ renderer: dropdownRenderer, width: 80, editor: false }))
   ], [dropdownRenderer, colHeaders]);
 
-  const handleFormProgress = () => {
-    setFormProgressed(true);
+  const handleFormProgress = async () => {
+    if (checkIfTableIsComplete()) {
+      setLoading(true);
+      try {
+        // Verileri toplama
+        const hotInstance = hotTableRef.current.hotInstance;
+        const updatedData = hotInstance.getData();
+        
+        // API'ye veri gönderme
+        const response = await fetch('https://localhost:7032/api/SaveData', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            revision,
+            month,
+            year,
+            data: updatedData
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error('Veri gönderimi başarısız oldu.');
+        }
+        
+        const result = await response.json();
+        console.log('Veri başarıyla gönderildi:', result);
+        
+        // Form ilerletme işlemi
+        setFormProgressed(true);
+      } catch (error) {
+        console.error('API çağrısında hata oluştu:', error);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setSnackbarMessage('Tablodaki tüm alanların doldurulması gerekiyor.');
+      setSnackbarOpen(true);
+    }
   };
+  
 
   return (
     <div className="production-table">
@@ -249,14 +294,21 @@ setLoading(true);
                 Formu İlerlet
               </button>
             )}
-            {/* <button className="draft-save-button">Taslak Kaydet</button>
-            <button className="send-for-review-button">Görüşe Yolla</button>
-            <button className="publish-revision-button">Revizyonu Yayınla</button> */}
           </div>
+          <Snackbar
+            open={snackbarOpen}
+            autoHideDuration={6000}
+            onClose={() => setSnackbarOpen(false)}
+          >
+            <Alert onClose={() => setSnackbarOpen(false)} severity="info">
+              {snackbarMessage}
+            </Alert>
+          </Snackbar>
         </>
       )}
     </div>
   );
+  
   
 });
 

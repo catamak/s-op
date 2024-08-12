@@ -5,7 +5,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-     background-image: url('../assets/images/profile.png'); 
+     background-image: url('../assets/images/socar.png'); 
     background-size: cover;
     animation: blinker 0.5s linear infinite; /* Use 'linear' for a consistent animation speed */
 

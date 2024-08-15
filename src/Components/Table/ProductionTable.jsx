@@ -232,42 +232,60 @@ setLoading(true);
         // Verileri toplama
         const hotInstance = hotTableRef.current.hotInstance;
         const updatedData = hotInstance.getData();
-        
+  
+        // Request body oluşturma
+        const requestBody = {
+          revision_No: revision,
+          status: formProgressed, // true or false based on your form progress state
+          comment: "İlerletme işlemi yapıldı.", // Adjust the comment as needed
+          revision_Date: new Date().toISOString(), // Current date and time
+          values: updatedData.map((row, rowIndex) => {
+            return row.slice(2).map((value, colIndex) => ({
+              value_id: rowIndex * colHeaders.length + colIndex, // Adjust based on your logic
+              factory_Product_id: colIndex, // Adjust based on your logic
+              value: value,
+              revision_id: revision, // Adjust based on your logic
+              date: new Date().toISOString(), // Adjust based on your logic
+              inserted_Time: new Date().toISOString(),
+              updated_Time: new Date().toISOString(),
+              isDeleted: false, // Adjust based on your logic
+              updated_User: "user" // Adjust based on your logic
+            }));
+          }).flat()
+        };
+  
         // API'ye veri gönderme
-        const response = await fetch('https://localhost:7032/api/SaveData', {
+        const response = await fetch('https://localhost:7032/api/Revisions/submit-production-schedule', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({
-            revision,
-            month,
-            year,
-            data: updatedData
-          })
+          body: JSON.stringify(requestBody)
         });
-        
+  
         if (!response.ok) {
-          throw new Error('Veri gönderimi başarısız oldu.');
+          const errorText = await response.text();
+          throw new Error(`Veri gönderimi başarısız oldu: ${errorText}`);
         }
-        
+  
         const result = await response.json();
         console.log('Veri başarıyla gönderildi:', result);
-        
+  
         // Form ilerletme işlemi
         setFormProgressed(true);
+        setSnackbarMessage('Form başarıyla ilerletildi.');
       } catch (error) {
         console.error('API çağrısında hata oluştu:', error);
+        setSnackbarMessage(`Veri gönderimi sırasında bir hata oluştu: ${error.message}`);
       } finally {
         setLoading(false);
       }
     } else {
       setSnackbarMessage('Tablodaki tüm alanların doldurulması gerekiyor.');
-      setSnackbarOpen(true);
     }
   };
   
-
+  
   return (
     <div className="production-table">
       {loading ? (

@@ -42,10 +42,42 @@ const HomePage = () => {
 
   const handleSubmitForm = () => {
     if (isTableComplete) {
-      setFormStatus('submitted');
-      setSnackbarMessage('Form başarıyla ilerletildi.');
-      setSnackbarOpen(true);
-      setShowReviewAndPublishButtons(true);
+      const requestData = {
+        revision_No: revision,
+        status: true,
+        comment: "Initial Revision",
+        revision_Date: new Date().toISOString(),
+        values: tableData.map(row => ({
+          value_id: row[0], // Örnek değerler
+          factory_Product_id: row[1], // Örnek değerler
+          value: row[2], // Örnek değerler
+          revision_id: revision,
+          date: new Date().toISOString(),
+          inserted_Time: new Date().toISOString(),
+          updated_Time: new Date().toISOString(),
+          isDeleted: false,
+          updated_User: "user" // Örnek değer
+        }))
+      };
+
+      fetch('https://localhost:7032/api/Revisions/submit-production-schedule', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+        setFormStatus('submitted');
+        setSnackbarMessage('Form başarıyla ilerletildi.');
+        setSnackbarOpen(true);
+        setShowReviewAndPublishButtons(true);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
     } else {
       setSnackbarMessage('Lütfen tüm dropdown değerlerini seçiniz.');
       setSnackbarOpen(true);
@@ -145,7 +177,6 @@ const HomePage = () => {
           {snackbarMessage}
         </Alert>
       </Snackbar>
-  
     </div>
   );
 };

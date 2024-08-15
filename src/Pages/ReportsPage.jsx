@@ -1,62 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Navbar from '../Components/Navbar/Navbar';
-import Toolbar from '../Components/ComparisonToolbar/ComparisonToolbar';
+import ComparisonToolbar from '../Components/ComparisonToolbar/ComparisonToolbar';
 import ComparisonTable from '../Components/ComparisonTable/ComparisonTable';
 import ComparisonChart from '../Components/ComparisonChart/ComparisonChart';
 import './ReportsPage.css';
 
 const ReportsPage = () => {
-  const [month, setMonth] = useState('');
-  const [revision1, setRevision1] = useState('');
-  const [revision2, setRevision2] = useState('');
+  const [month, setMonth] = useState(1); // Varsayılan olarak Ocak ayı
+  const [year, setYear] = useState(2024); // Varsayılan olarak 2024 yılı
+  const [revision1, setRevision1] = useState(-1); // Varsayılan olarak Revizyon -1
+  const [revision2, setRevision2] = useState(0); // Varsayılan olarak Revizyon 0
+  const [tableData, setTableData] = useState([]); // Tablo verilerini saklamak için
+  const [chartData, setChartData] = useState([]); // Grafik verilerini saklamak için
 
-  // Tablo verilerini güncelleme
-  const getTableData = () => {
-    // Revizyon değerlerine göre tabloyu dinamik olarak güncelleyin
-    return [
-      { factory: 'PVC', product: 'S23/59', rev1: revision1 || 22, rev2: revision2 || 15, diff: 17.5, conformity: 84.1 },
-      // Diğer veri satırlarını güncelleyin
-    ];
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('https://localhost:7032/api/Reports', {
+          params: {
+            revOneId: revision1,
+            revTwoId: revision2,
+            month: month,
+            year: year
+          }
+        });
 
-  // Grafik verilerini güncelleme
-  const getChartData = () => {
-    // Revizyon değerlerine göre grafik verilerini güncelleyin
-    return {
-      labels: ['Uyum 1', 'Uyum 2', 'Uyum 3', 'Uyum 4', 'Uyum 5', 'Uyum 6'],
-      datasets: [
-        {
-          label: 'PVC',
-          data: [85, 88, 89, 91, 92, 90], // Dinamik verilerle güncelleyin
-          borderColor: 'blue',
-          fill: false,
-        },
-        {
-          label: 'AYPE',
-          data: [97, 97, 97, 97, 97, 97], // Dinamik verilerle güncelleyin
-          borderColor: 'red',
-          fill: false,
-        },
-        // Diğer veri setlerini dinamik olarak güncelleyin
-      ],
+        console.log("API Yanıtı:", response.data); // Yanıtı kontrol edin
+        setTableData(response.data); // Tablo verilerini güncelle
+        setChartData(response.data); // Grafik verilerini güncelle
+      } catch (error) {
+        console.error('Veri çekme hatası:', error);
+      }
     };
-  };
 
-  // Özet tablo verilerini güncelleme
-  const getSummaryTableData = () => {
-    // Revizyon değerlerine göre özet tabloyu dinamik olarak güncelleyin
-    return [
-      { factory: 'AYPE', conformity: [97, 97, 97, 97, 97, 97, 97] },
-      // Diğer veri satırlarını dinamik olarak güncelleyin
-    ];
-  };
+    fetchData();
+  }, [revision1, revision2, month, year]); // Bağımlılıklar
 
   return (
     <div className="reports-page">
       <Navbar />
-      <Toolbar
+      <ComparisonToolbar
         month={month}
         setMonth={setMonth}
+        year={year}
+        setYear={setYear}
         revision1={revision1}
         setRevision1={setRevision1}
         revision2={revision2}
@@ -64,36 +52,12 @@ const ReportsPage = () => {
       />
       <div className="tables-and-chart">
         <div className="table-container">
-          <ComparisonTable title="UYUM TAKİBİ" data={getTableData()} />
+          <ComparisonTable title="UYUM TAKİBİ" data={tableData} />
         </div>
         <div className="chart-and-summary-container">
           <div className="summary-table-container">
             <h2>UYUM ÇİZELGESİ</h2>
-            <ComparisonChart title="UYUM ÇİZELGESİ" data={getChartData()} />
-            <table className="summary-table">
-              <thead>
-                <tr>
-                  <th>FABRİKA</th>
-                  <th>Uyum 0</th>
-                  <th>Uyum 1</th>
-                  <th>Uyum 2</th>
-                  <th>Uyum 3</th>
-                  <th>Uyum 4</th>
-                  <th>Uyum 5</th>
-                  <th>Uyum 6</th>
-                </tr>
-              </thead>
-              <tbody>
-                {getSummaryTableData().map((row, index) => (
-                  <tr key={index}>
-                    <td>{row.factory}</td>
-                    {row.conformity.map((conformity, i) => (
-                      <td key={i}>{conformity}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <ComparisonChart title="UYUM ÇİZELGESİ" data={chartData} />
           </div>
         </div>
       </div>

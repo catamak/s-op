@@ -6,7 +6,8 @@ import Toolbar from '../Components/ComparisonToolbar/ComparisonToolbar';
 import './ReportsPage.css';
 
 const UyumCizelgesiPage = () => {
-  const [month, setMonth] = useState('');
+  const [month, setMonth] = useState('8');
+  const [year, setYear] = useState('2024');
   const [revision1, setRevision1] = useState('');
   const [revision2, setRevision2] = useState('');
 
@@ -88,6 +89,8 @@ const UyumCizelgesiPage = () => {
       <Toolbar
         month={month}
         setMonth={setMonth}
+        year={year}
+        setyear={setYear}
         revision1={revision1}
         setRevision1={setRevision1}
         revision2={revision2}

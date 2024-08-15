@@ -2,9 +2,13 @@ import React from 'react';
 import { Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import './ComparisonToolbar.css';
 
-const ComparisonToolbar = ({ month, setMonth, revision1, setRevision1, revision2, setRevision2 }) => {
+const ComparisonToolbar = ({ month, setMonth, year, setYear, revision1, setRevision1, revision2, setRevision2 }) => {
   const handleMonthChange = (event) => {
     setMonth(event.target.value);
+  };
+
+  const handleYearChange = (event) => {
+    setYear(event.target.value); // setYear fonksiyonunu çağırın
   };
 
   const handleRevision1Change = (event) => {
@@ -19,7 +23,7 @@ const ComparisonToolbar = ({ month, setMonth, revision1, setRevision1, revision2
     <div className="reportstoolbar">
       <Box sx={{ minWidth: 120, marginRight: 2, height: '40px' }} className="toolbar-item">
         <FormControl fullWidth>
-          <InputLabel id="month-label">Ay</InputLabel>
+      
           <Select
             labelId="month-label"
             id="month-select"
@@ -55,6 +59,38 @@ const ComparisonToolbar = ({ month, setMonth, revision1, setRevision1, revision2
             <MenuItem value={10}>Ekim</MenuItem>
             <MenuItem value={11}>Kasım</MenuItem>
             <MenuItem value={12}>Aralık</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
+      <Box sx={{ minWidth: 120, marginRight: 2, height: '40px' }} className="toolbar-item">
+        <FormControl fullWidth>
+          <Select
+            labelId="year-label"
+            id="year-select"
+            value={year}
+            label="Yıl"
+            onChange={handleYearChange}
+            sx={{
+              backgroundColor: '#93BFB7',
+              color: 'white',
+              '& .MuiSelect-icon': {
+                color: 'white',
+              },
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderColor: 'transparent',
+              },
+              '&:hover .MuiOutlinedInput-notchedOutline': {
+                borderColor: 'transparent',
+              },
+              height: '40px',
+              lineHeight: '50px',
+              fontSize: '16px'
+            }}
+          >
+            {Array.from({ length: 10 }, (_, i) => {
+              const yearOption = new Date().getFullYear() - i;
+              return <MenuItem key={yearOption} value={yearOption}>{yearOption}</MenuItem>;
+            })}
           </Select>
         </FormControl>
       </Box>
@@ -112,7 +148,7 @@ const ComparisonToolbar = ({ month, setMonth, revision1, setRevision1, revision2
                 borderColor: 'transparent',
               },
               height: '40px',
-              lineHeight: '40px',
+              lineHeight: '50px',
               fontSize: '16px'
             }}
           >

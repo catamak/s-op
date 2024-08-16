@@ -1,6 +1,6 @@
-// Toolbar.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FormControl, Select, MenuItem, Button, Box, Snackbar, Alert } from '@mui/material';
+import axios from 'axios';
 import './Toolbar.css';
 
 const Toolbar = ({ 
@@ -16,6 +16,21 @@ const Toolbar = ({
   const [showAdvancedButtons, setShowAdvancedButtons] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+
+  const fetchRevisionData = async (revisionNumber) => {
+    try {
+      const response = await axios.get(`/api/data?revision=${revisionNumber}`);
+      console.log(response.data);
+    } catch (error) {
+      console.error('Veri çekme hatası:', error);
+    }
+  };
+
+  const handleRevisionChange = (event) => {
+    const selectedRevision = event.target.value;
+    setRevision(selectedRevision);
+    fetchRevisionData(selectedRevision);
+  };
 
   const handleAdvanceForm = () => {
     if (!isTableComplete) {
@@ -71,19 +86,15 @@ const Toolbar = ({
             <Select
               id="revision-select"
               value={revision}
-              onChange={(e) => setRevision(e.target.value)}
+              onChange={handleRevisionChange}
               displayEmpty
               inputProps={{ 'aria-label': 'Revizyon' }}
               sx={{ fontSize: 16, backgroundColor: '#f5f5f5' }}
               renderValue={(selected) => selected === "" ? "Revizyon" : `Revizyon ${selected}`}
             >
-              {revision > 0 ? (
-                [...Array(revision + 1).keys()].map(i => (
-                  <MenuItem key={i} value={i}>Revizyon {i}</MenuItem>
-                ))
-              ) : (
-                <MenuItem disabled>Geçmiş Revizyon Bulunamadı</MenuItem>
-              )}
+              {[-1, 0, 1].map(i => (
+                <MenuItem key={i} value={i}>Revizyon {i}</MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Box>

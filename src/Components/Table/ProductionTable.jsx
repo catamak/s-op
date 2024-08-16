@@ -7,7 +7,6 @@ import Spinner from '../spinner';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 
-
 const ProductionTable = React.memo(({ revision, month, year, updateTableData }) => {
   const [data, setData] = useState([]);
   const [colHeaders, setColHeaders] = useState(['Gün', 'Tarih']);
@@ -18,15 +17,13 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
   const [formProgressed, setFormProgressed] = useState(false);
   const hotTableRef = useRef(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const [loading, setLoading] = useState("");
- 
-
+  // Fetch data and initialize table
   useEffect(() => {
     const fetchData = async () => {
-    
-setLoading(true);
+      setLoading(true);
       try {
         const response = await fetch('https://localhost:7032/api/Factories');
         const data = await response.json();
@@ -75,23 +72,23 @@ setLoading(true);
         }
       } catch (error) {
         console.error('API çağrısında hata oluştu:', error);
+        setSnackbarMessage('Veri yüklenirken hata oluştu.');
+        setSnackbarOpen(true);
+      } finally {
+        setLoading(false);
       }
-      finally {
-        setTimeout(() => {
-          setLoading(false);
-        }, 600);
-      }
-
     };
 
     fetchData();
   }, [month, year]);
 
+  // Check table completion and update parent component
   useEffect(() => {
     const isComplete = checkIfTableIsComplete();
     updateTableData(data, isComplete);
   }, [data, updateTableData]);
 
+  // Check if table is complete
   const checkIfTableIsComplete = () => {
     if (hotTableRef.current) {
       const hotInstance = hotTableRef.current.hotInstance;
@@ -110,6 +107,7 @@ setLoading(true);
     return false;
   };
 
+  // Dropdown renderer function
   const dropdownRenderer = useCallback((instance, td, row, col, prop, value, cellProperties) => {
     Handsontable.renderers.TextRenderer.apply(this, [instance, td, row, col, prop, value, cellProperties]);
 
@@ -225,109 +223,46 @@ setLoading(true);
     ...colHeaders.slice(2).map(() => ({ renderer: dropdownRenderer, width: 80, editor: false }))
   ], [dropdownRenderer, colHeaders]);
 
-  const handleFormProgress = async () => {
-    if (checkIfTableIsComplete()) {
-      setLoading(true);
-      try {
-        // Verileri toplama
-        const hotInstance = hotTableRef.current.hotInstance;
-        const updatedData = hotInstance.getData();
-  
-        // Request body oluşturma
-        const requestBody = {
-          revision_No: revision,
-          status: formProgressed, // true or false based on your form progress state
-          comment: "İlerletme işlemi yapıldı.", // Adjust the comment as needed
-          revision_Date: new Date().toISOString(), // Current date and time
-          values: updatedData.map((row, rowIndex) => {
-            return row.slice(2).map((value, colIndex) => ({
-              value_id: rowIndex * colHeaders.length + colIndex, // Adjust based on your logic
-              factory_Product_id: colIndex, // Adjust based on your logic
-              value: value,
-              revision_id: revision, // Adjust based on your logic
-              date: new Date().toISOString(), // Adjust based on your logic
-              inserted_Time: new Date().toISOString(),
-              updated_Time: new Date().toISOString(),
-              isDeleted: false, // Adjust based on your logic
-              updated_User: "user" // Adjust based on your logic
-            }));
-          }).flat()
-        };
-  
-        // API'ye veri gönderme
-        const response = await fetch('https://localhost:7032/api/Revisions/submit-production-schedule', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(requestBody)
-        });
-  
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`Veri gönderimi başarısız oldu: ${errorText}`);
-        }
-  
-        const result = await response.json();
-        console.log('Veri başarıyla gönderildi:', result);
-  
-        // Form ilerletme işlemi
-        setFormProgressed(true);
-        setSnackbarMessage('Form başarıyla ilerletildi.');
-      } catch (error) {
-        console.error('API çağrısında hata oluştu:', error);
-        setSnackbarMessage(`Veri gönderimi sırasında bir hata oluştu: ${error.message}`);
-      } finally {
-        setLoading(false);
-      }
+  // Handle form progress change
+  const handleFormProgressChange = () => {
+    const isComplete = checkIfTableIsComplete();
+    setFormProgressed(isComplete);
+    if (!isComplete) {
+      setSnackbarMessage('Lütfen tabloyu tamamlayın.');
+      setSnackbarOpen(true);
     } else {
-      setSnackbarMessage('Tablodaki tüm alanların doldurulması gerekiyor.');
+      updateTableData(data, isComplete);
     }
   };
-  
-  
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
   return (
     <div className="production-table">
-      {loading ? (
-        <Spinner /> // Spinner componenti burada gösterilecek
-      ) : (
-        <>
-          <HotTable
-            data={data}
-            colHeaders={colHeaders}
-            nestedHeaders={nestedHeaders}
-            editor={false}
-            rowHeaders={false}
-            width="100%"
-            height="auto"
-            licenseKey="non-commercial-and-evaluation"
-            columns={columnSettings}
-            stretchH="all"
-            className="handsontable"
-            ref={hotTableRef}
-          />
-          <div className="buttons-container">
-            {formProgressed && (
-              <button onClick={handleFormProgress} className="form-progress-button">
-                Formu İlerlet
-              </button>
-            )}
-          </div>
-          <Snackbar
-            open={snackbarOpen}
-            autoHideDuration={6000}
-            onClose={() => setSnackbarOpen(false)}
-          >
-            <Alert onClose={() => setSnackbarOpen(false)} severity="info">
-              {snackbarMessage}
-            </Alert>
-          </Snackbar>
-        </>
+      {loading ? <Spinner /> : (
+        <HotTable
+          ref={hotTableRef}
+          data={data}
+          colHeaders={colHeaders}
+          nestedHeaders={nestedHeaders}
+          columns={columnSettings}
+          rowHeaders={true}
+          manualColumnResize={true}
+          height="auto"
+          stretchH="all"
+          licenseKey="non-commercial-and-evaluation"
+        />
       )}
+      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
+        <Alert onClose={handleSnackbarClose} severity="error">
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+    
     </div>
   );
-  
-  
 });
 
 export default ProductionTable;

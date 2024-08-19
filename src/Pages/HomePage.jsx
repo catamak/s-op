@@ -6,13 +6,6 @@ import ProductionTable from '../Components/Table/ProductionTable';
 import RevisionDialog from '../Components/RevisionDialog/RevisionDialog';
 import './HomePage.css';
 
-// Custom function to get factory line ID from column index
-const getFactoryLineIdFromColIndex = (colIndex) => {
-  // Add logic to determine the factory line ID based on the column index
-  // Placeholder example:
-  return colIndex + 1;
-};
-
 const HomePage = () => {
   const [revision, setRevision] = useState(-1);
   const [month, setMonth] = useState('');
@@ -27,7 +20,7 @@ const HomePage = () => {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [tableData, setTableData] = useState([]);
   const [showReviewAndPublishButtons, setShowReviewAndPublishButtons] = useState(false);
-  const [isTableComplete, setIsTableComplete] = useState(false);
+  const [isTableComplete, setIsTableComplete] = useState(false); // Tablo tamamlanma durumu
 
   useEffect(() => {
     const currentDate = new Date();
@@ -36,39 +29,12 @@ const HomePage = () => {
   }, []);
 
   useEffect(() => {
-    const fetchRevisionData = async () => {
-      try {
-        const response = await fetch(`https://localhost:7032/api/Revisions/revisions`);
-        const revisionData = await response.json();
-
-        const selectedRevision = revisionData.find(rev => rev.revision_No === revision);
-
-        if (selectedRevision) {
-          const mappedData = tableData.map((row, rowIndex) => {
-            return row.map((cell, colIndex) => {
-              if (colIndex >= 2) { // Ignore 'Gün' and 'Tarih' columns
-                const factoryLineId = getFactoryLineIdFromColIndex(colIndex);
-                const valueEntry = selectedRevision.values.find(val => val.factory_Product_id === factoryLineId && val.date === row[1]);
-
-                return valueEntry ? valueEntry.value : '';
-              }
-              return cell;
-            });
-          });
-
-          setTableData(mappedData);
-        }
-      } catch (error) {
-        console.error('Error fetching revision data:', error);
-        setSnackbarMessage('Revisyon verilerini yüklerken hata oluştu.');
-        setSnackbarOpen(true);
-      }
-    };
-
-    if (revision) {
-      fetchRevisionData();
+    if (revision > -1) {
+      fetchRevisionData(revision);
     }
-  }, [revision, month, year, tableData]);
+  }, [revision]);
+  
+
 
   const handleRevisionChange = (event) => {
     const selectedRevision = event.target.value;
@@ -184,18 +150,17 @@ const HomePage = () => {
     setTableData(data);
     setIsTableComplete(isComplete);
   };
-
-  // Fetch data for a specific revision
   const fetchRevisionData = (revisionId) => {
     fetch(`https://localhost:7032/api/Factories/get-revision-data/${revisionId}`)
       .then(response => response.json())
       .then(data => {
-        setTableData(data.values); // Only necessary data fields are set
+        setTableData(data);
       })
       .catch(error => {
         console.error('Error fetching revision data:', error);
       });
   };
+  
 
   return (
     <div className="home-page">
@@ -212,7 +177,7 @@ const HomePage = () => {
         handleSendForReview={handleSendForReview}
         handlePublishRevision={handlePublishRevision}
         handleNewRevision={handleNewRevision}
-        isTableComplete={isTableComplete}
+        isTableComplete={isTableComplete} // Tablo tamamlanma durumunu geçiyoruz
       />
       <div className="content">
         <ProductionTable
@@ -220,7 +185,6 @@ const HomePage = () => {
           month={month}
           year={year}
           updateTableData={updateTableData}
-          tableData={tableData}
         />
       </div>
       <RevisionDialog

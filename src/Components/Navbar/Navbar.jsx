@@ -56,7 +56,7 @@ const Navbar = () => {
         </div>
         
         <div className="navbar-profile">
-          <div className="navbar-profile-name">Username</div>
+          <div className="navbar-profile-name">Kullanıcı Adı</div>
           <img className="navbar-profile-img" src={profile} alt="Profile" />
         </div>
       </div>

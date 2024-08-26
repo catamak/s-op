@@ -26,9 +26,10 @@
   font-family: "Poppins", sans-serif;
   font-weight: 1000;
   font-style: normal;
-  font-size: 22px;
-  padding-left: 300px; /* İstenilen değeri buraya girin */
+  font-size: 1.5vw; /* Esnek yazı boyutu */
+  padding-left: 2vw; /* Esnek padding değeri */
   padding-top: 5px;
+  white-space: nowrap; /* Taşmayı önler */
 }
 
 /* Sağ kısmı düzenler */
@@ -39,45 +40,41 @@
 
 /* Genel buton stili */
 .navbar-button {
-  margin-right: 10px; /* Butonlar arasında boşluk */
-
-}
-
-/* FontAwesome ikonları */
-.svg-inline--fa {
-  padding-left: 10px;
-  margin-right: 10px;
-  margin-bottom: 0px;
-  height: 1.1rem;
-}
-
-/* Hover durumunda buton */
-.navbar-button:hover {
-  text-decoration: underline;
-  background-color: rgba(255, 255, 255, 0.1); /* Hover arka plan rengi */
-}
-
-/* Dropdown menüsü */
-.navbar-dropdown {
-  position: relative;
-
-}.navbar-dropdown:hover{
-  text-decoration: underline;
-  background-color: rgba(255, 255, 255, 0.1); /* Hover arka plan rengi */
-}
-
-.navbar-dropdown .dropdown-toggle {
+  color: white;
   background: none;
   border: none;
-  color: white;
   font-size: 16px;
   font-weight: 700;
   display: flex;
   align-items: center;
   cursor: pointer;
+  padding: 10px;
+  margin-right: 10px;
+  font-family: "Poppins", sans-serif;
+  transition: background-color 0.3s, text-decoration 0.3s;
+}
+
+/* FontAwesome ikonları */
+.svg-inline--fa {
+  margin-right: 10px;
+  height: 1.1rem;
+}
+
+/* Hover durumunda butonlar */
+.navbar-button:hover,
+.navbar-dropdown:hover .dropdown-toggle {
+  text-decoration: underline;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Dropdown menüsü */
+.navbar-dropdown {
+  position: relative;
+}
+
+.navbar-dropdown .dropdown-toggle {
   padding: 16px;
-font-family: "Poppins", sans-serif;
-}  
+}
 
 /* Dropdown menü */
 .dropdown-menu {
@@ -90,23 +87,23 @@ font-family: "Poppins", sans-serif;
   margin-top: 5px;
   z-index: 1000;
   width: 150px;
-  display: none; /* Varsayılan olarak gizli */
+  display: none;
 }
 
 /* Dropdown menüsü açıkken */
 .dropdown-menu.show {
-  display: block; /* Göster */
+  display: block;
 }
+
 /* Dropdown menü öğeleri */
 .dropdown-item {
   color: white;
   text-decoration: none;
   display: flex;
   align-items: center;
-  padding: 5px; /* Küçültülmüş padding */
-  font-size: 12px; /* Küçültülmüş yazı boyutu */
+  padding: 5px;
+  font-size: 12px;
 }
-
 
 /* Dropdown menü öğeleri üzerinde hover */
 .dropdown-item:hover {
@@ -120,8 +117,11 @@ font-family: "Poppins", sans-serif;
   padding: 5px 10px;
   background-color: #387373;
   border-radius: 8px;
+  margin-left: 10px;
+  transition: background-color 0.3s;
 }
 
+/* Profil resmi */
 .navbar-profile-img {
   height: 2.5rem;
   width: 2.5rem;
@@ -131,6 +131,27 @@ font-family: "Poppins", sans-serif;
   margin-left: 10px;
 }
 
+/* Profil ismi */
 .navbar-profile-name {
   font-size: 16px;
+}
+
+/* Profil kısmı hover durumu */
+.navbar-profile:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Medya sorguları */
+@media (max-width: 768px) {
+  .navbar-title {
+    font-size: 4vw; /* Küçük ekranlarda daha küçük boyut */
+    padding-left: 1vw; /* Padding küçültme */
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-title {
+    font-size: 5vw; /* Daha küçük ekranlar için */
+    padding-left: 0.5vw;
+  }
 }

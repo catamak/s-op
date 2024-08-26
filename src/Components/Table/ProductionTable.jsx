@@ -14,13 +14,11 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
   const [factoriesData, setFactoriesData] = useState([]);
   const [dropdownData, setDropdownData] = useState({});
   const [dropdownValues, setDropdownValues] = useState({});
-  const [formProgressed, setFormProgressed] = useState(false);
+  const [loading, setLoading] = useState(false);
   const hotTableRef = useRef(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [loading, setLoading] = useState(false);
 
-  // Fetch data and initialize table
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -66,7 +64,7 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
             const currentDate = new Date(year, month - 1, i + 1);
             const dayName = currentDate.toLocaleDateString('tr-TR', { weekday: 'long' });
             const formattedDate = currentDate.toLocaleDateString('tr-TR');
-            return [dayName, formattedDate];
+            return [dayName, formattedDate, ...Array(factoryHeaders.length).fill('')];
           });
           setData(newData);
         }
@@ -82,32 +80,22 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
     fetchData();
   }, [month, year]);
 
-  // Check table completion and update parent component
   useEffect(() => {
-    const isComplete = checkIfTableIsComplete();
-    updateTableData(data, isComplete);
-  }, [data, updateTableData]);
+    checkIfTableIsComplete();
+  }, [data]);
 
-  // Check if table is complete
   const checkIfTableIsComplete = () => {
-    if (hotTableRef.current) {
-      const hotInstance = hotTableRef.current.hotInstance;
-      const rows = hotInstance.countRows();
-      const cols = hotInstance.countCols();
-      for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols; col++) {
-          const cellValue = hotInstance.getDataAtCell(row, col);
-          if (cellValue === null || cellValue === '') {
-            return false;
-          }
-        }
+    let isComplete = true;
+
+    data.forEach(row => {
+      if (row.some(cell => cell === null || cell === '' || cell === undefined)) {
+        isComplete = false;
       }
-      return true;
-    }
-    return false;
+    });
+
+    updateTableData(data, isComplete);
   };
 
-  // Dropdown renderer function
   const dropdownRenderer = useCallback((instance, td, row, col, prop, value, cellProperties) => {
     Handsontable.renderers.TextRenderer.apply(this, [instance, td, row, col, prop, value, cellProperties]);
 
@@ -152,10 +140,13 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
       select.appendChild(optionElement);
     });
 
-    select.value = value || '';
+    let selectedProduct = value ? value.split('|')[0] : '';
+    let selectedCapacity = value ? value.split('|')[1] : dropdownValues[`${uniqueLineKey}-${select.value}`] || '';
+
+    select.value = selectedProduct;
+    input.value = selectedCapacity;
 
     input.type = 'text';
-    input.value = dropdownValues[`${uniqueLineKey}-${select.value}`] || '';
     input.style.width = '100%';
     input.style.border = 'none';
     input.style.height = '50%';
@@ -169,44 +160,41 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
     select.style.fontWeight = 'bold';
 
     select.onchange = () => {
-      const selectedValue = select.value;
-      const newValue = dropdownValues[`${uniqueLineKey}-${selectedValue}`] || '';
+      selectedProduct = select.value;
+      selectedCapacity = dropdownValues[`${uniqueLineKey}-${selectedProduct}`] || '0';
       instance.batch(() => {
         const rowCount = instance.countRows();
-        for (let r = row; r < rowCount; r++) {
-          instance.setDataAtCell(r, col, selectedValue);
+        for (let r = 0; r < rowCount; r++) {
+          instance.setDataAtCell(r, col, `${selectedProduct}|${selectedCapacity}`);
           const cell = instance.getCell(r, col);
           const inputElement = cell.querySelector('input');
           if (inputElement) {
-            inputElement.value = newValue;
+            inputElement.value = selectedCapacity;
           }
           const selectElement = cell.querySelector('select');
           if (selectElement) {
-            selectElement.value = selectedValue;
+            selectElement.value = selectedProduct;
           }
         }
       });
-      input.value = newValue;
-      const isComplete = checkIfTableIsComplete();
-      updateTableData(data, isComplete);
+      checkIfTableIsComplete();
     };
 
     input.onchange = () => {
-      const newCapacity = parseInt(input.value, 10);
-      if (!isNaN(newCapacity)) {
-        instance.batch(() => {
-          const rowCount = instance.countRows();
-          for (let r = row; r < rowCount; r++) {
-            const cell = instance.getCell(r, col);
-            const inputElement = cell.querySelector('input');
-            if (inputElement) {
-              inputElement.value = newCapacity;
-            }
+      const newCapacity = input.value;
+      instance.batch(() => {
+        const rowCount = instance.countRows();
+        for (let r = 0; r < rowCount; r++) {
+          const cell = instance.getCell(r, col);
+          const inputElement = cell.querySelector('input');
+          if (inputElement) {
+            inputElement.value = newCapacity;
           }
-        });
-      }
-      const isComplete = checkIfTableIsComplete();
-      updateTableData(data, isComplete);
+          const existingData = instance.getDataAtCell(r, col).split('|')[0];
+          instance.setDataAtCell(r, col, `${existingData}|${newCapacity}`);
+        }
+      });
+      checkIfTableIsComplete();
     };
 
     td.innerHTML = '';
@@ -223,18 +211,6 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
     ...colHeaders.slice(2).map(() => ({ renderer: dropdownRenderer, width: 80, editor: false }))
   ], [dropdownRenderer, colHeaders]);
 
-  // Handle form progress change
-  const handleFormProgressChange = () => {
-    const isComplete = checkIfTableIsComplete();
-    setFormProgressed(isComplete);
-    if (!isComplete) {
-      setSnackbarMessage('Lütfen tabloyu tamamlayın.');
-      setSnackbarOpen(true);
-    } else {
-      updateTableData(data, isComplete);
-    }
-  };
-
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
@@ -248,7 +224,7 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
           colHeaders={colHeaders}
           nestedHeaders={nestedHeaders}
           columns={columnSettings}
-          rowHeaders={true}
+          rowHeaders={false}
           manualColumnResize={true}
           height="auto"
           stretchH="all"
@@ -260,7 +236,6 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
           {snackbarMessage}
         </Alert>
       </Snackbar>
-    
     </div>
   );
 });

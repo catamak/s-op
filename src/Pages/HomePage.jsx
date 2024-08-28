@@ -52,19 +52,18 @@ const HomePage = () => {
   const handleSubmitForm = () => {
     if (isTableComplete) {
       const status = formStatus === 'draft' ? 0 : (formStatus === 'inReview' ? 1 : 2);
-      const comment = status === 0 ? "Taslak Form" : (status === 1 ? "Görüşe Yollandi" : "Yayinda");
+      const comment = "Initial Revision";  // Burada Comment alanı tanımlanmalı
   
       const requestData = {
-        revisionNo: revision,
-        createdBy: "user123",
-        status,
-        comment,
-        revisionDate: new Date().toISOString(),
-        productionLines: factoriesData.flatMap((factory, factoryIndex) =>
-          factory.productLines.map((line, lineIndex) => ({
-            factory: factory.factory_Name,
-            line: line.line_Name,
-            monthlyCapacities: tableData.map(row => {
+          revisionNo: revision,
+          createdBy: "user123",
+          status,
+          comment,  // Comment alanını JSON yapısına ekleyin
+          revisionDate: new Date().toISOString(),
+        
+        ProductLines: factoriesData.flatMap((factory, factoryIndex) =>
+          factory.productLines.map((line, lineIndex) => {
+            const monthlyCapacities = tableData.map(row => {
               const [day, date, ...values] = row;
               const productCapacityData = values[factoryIndex * factory.productLines.length + lineIndex];
               const [productCode, capacity] = productCapacityData ? productCapacityData.split('|') : ['', ''];
@@ -76,12 +75,20 @@ const HomePage = () => {
                 insertedTime: new Date().toISOString(),
                 updatedTime: new Date().toISOString(),
                 isDeleted: false,
-                updatedUser: "user"
+                updatedUser: "user123"
               };
-            })
-          }))
+            });
+  
+            return {
+              factory: factory.factory_Name,
+              line: line.line_Name,
+              monthlyCapacities
+            };
+          })
         )
       };
+  
+      console.log("Request Data:", JSON.stringify(requestData, null, 2));
   
       fetch('https://localhost:7032/api/Revisions/submit-production-schedule', {
         method: 'POST',
@@ -114,6 +121,9 @@ const HomePage = () => {
       setSnackbarOpen(true);
     }
   };
+  
+  
+  
   
   const updateTableData = (data, isComplete) => {
     console.log(data);

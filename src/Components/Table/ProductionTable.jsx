@@ -7,6 +7,9 @@ import Spinner from '../spinner';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 
+
+
+
 const ProductionTable = React.memo(({ revision, month, year, updateTableData }) => {
   const [data, setData] = useState([]);
   const [colHeaders, setColHeaders] = useState(['Gün', 'Tarih']);
@@ -19,33 +22,36 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
 
+  function formatAPIDate(apiDate) {
+    const date = new Date(apiDate); // API'den gelen ISO tarihini Date objesine dönüştürür
+    return date.toLocaleDateString('tr-TR'); // 'DD.MM.YYYY' formatına dönüştürür
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
         const response = await fetch('https://localhost:7032/api/Factories');
-        const data = await response.json();
-        setFactoriesData(data);
+        if (!response.ok) {
+          throw new Error('Failed to fetch factory data');
+        }
+        const factories = await response.json();
+        setFactoriesData(factories);
 
         const factoryHeaders = [];
         const nestedFactoryHeaders = [{ label: 'Takvim', colspan: 2 }];
         const dropdownDataMap = {};
         const dropdownValueMap = {};
 
-        data.forEach(factory => {
+        factories.forEach(factory => {
           const lineNames = [];
           factory.productLines.forEach(line => {
             const uniqueLineKey = `${factory.factory_id}-${line.product_Line_id}`;
             lineNames.push(line.line_Name);
 
-            const productsForLine = line.factoryProducts.map(product => ({
-              name: product.product_Name,
-              value: product.value
-            }));
-
-            dropdownDataMap[uniqueLineKey] = productsForLine.map(product => product.name);
-            productsForLine.forEach(product => {
-              dropdownValueMap[`${uniqueLineKey}-${product.name}`] = product.value;
+            line.factoryProducts.forEach(product => {
+              dropdownDataMap[uniqueLineKey] = (dropdownDataMap[uniqueLineKey] || []).concat(product.product_Name);
+              dropdownValueMap[`${uniqueLineKey}-${product.product_Name}`] = product.value;
             });
           });
 
@@ -58,19 +64,34 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
         setDropdownData(dropdownDataMap);
         setDropdownValues(dropdownValueMap);
 
-        if (month && year) {
-          const daysInMonth = new Date(year, month, 0).getDate();
-          const newData = Array.from({ length: daysInMonth }, (_, i) => {
-            const currentDate = new Date(year, month - 1, i + 1);
-            const dayName = currentDate.toLocaleDateString('tr-TR', { weekday: 'long' });
-            const formattedDate = currentDate.toLocaleDateString('tr-TR');
-            return [dayName, formattedDate, ...Array(factoryHeaders.length).fill('')];
-          });
-          setData(newData);
+        const planningValuesResponse = await fetch('https://localhost:7032/api/PlanningValues/getPlanningValues');
+        if (!planningValuesResponse.ok) {
+          throw new Error('Failed to fetch planning values');
         }
+        const planningValues = await planningValuesResponse.json();
+
+        const daysInMonth = new Date(year, month, 0).getDate();
+        const newData = Array.from({ length: daysInMonth }, (_, i) => {
+          const date = new Date(year, month - 1, i + 1);
+          const dayName = date.toLocaleDateString('tr-TR', { weekday: 'long' });
+          const formattedDate = date.toLocaleDateString('tr-TR');
+          const row = [dayName, formattedDate, ...Array(factoryHeaders.length).fill('')];
+
+          planningValues.planningValues.forEach(value => {
+            const formattedAPIDate = formatAPIDate(value.date);
+            if (formattedAPIDate === formattedDate) {
+                row[value.productLineId + 1] = `${value.productName}|${value.value}`;
+            }
+        });
+          return row;
+        });
+
+
+        console.log(newData)
+        setData(newData);
       } catch (error) {
-        console.error('API çağrısında hata oluştu:', error);
-        setSnackbarMessage('Veri yüklenirken hata oluştu.');
+        console.error('Error loading data:', error);
+        setSnackbarMessage('Error loading data. Please try again later.');
         setSnackbarOpen(true);
       } finally {
         setLoading(false);
@@ -79,6 +100,8 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
 
     fetchData();
   }, [month, year]);
+
+
 
   useEffect(() => {
     checkIfTableIsComplete();
@@ -91,8 +114,8 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
       if (row.some(cell => cell === null || cell === '' || cell === undefined)) {
         isComplete = false;
       }
-    });
-
+    })
+    // console.log(data);
     updateTableData(data, isComplete);
   };
 

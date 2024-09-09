@@ -31,7 +31,7 @@ const ProductionTable = React.memo(({ revision, month, year, updateTableData }) 
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch('https://localhost:7032/api/Factories');
+        const response = await fetch('https://localhost:7032/api/Factories');//isimlendirmesi degisecek
         if (!response.ok) {
           throw new Error('Failed to fetch factory data');
         }
